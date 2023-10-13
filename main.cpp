@@ -9,6 +9,8 @@ const char kWindowTitle[] = "6145_刹ニャのイタズラ";
 
 void DrawSquare(Vec2& center, float rad, unsigned int color);
 
+//void OwnerCheck(int &timer,Vec2 &center)
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// ライブラリの初期化
@@ -27,6 +29,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		6,
 		BLACK
 	};
+	//true：生きてる false：死んでる
+	bool isObjAlive = true;
+
+	//振り向くまでの時間
+	int ownerTimer = 0;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -52,6 +59,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 		obj.Center.X += obj.Velocity.X * obj.Spd;
+
+		if (isObjAlive)
+		{
+			ownerTimer++;
+			if (ownerTimer >= 300)
+			{
+				ownerTimer = 0;
+			}
+		}
 		
 		/// ↑更新処理ここまで
 		
@@ -59,8 +75,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		
 		/// ↓描画処理ここから
 		
-		DrawSquare(obj.Center, obj.Rad, obj.Color);
-		
+		// 自機
+		if (isObjAlive)
+		{
+			DrawSquare(obj.Center, obj.Rad, obj.Color);
+		}
+		// 
+		Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 60);
+
 		/// ↑描画処理ここまで
 
 		// フレームの終了
