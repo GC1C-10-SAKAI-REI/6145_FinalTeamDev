@@ -14,6 +14,7 @@ void DrawSquare(Vec2 &center, float rad, unsigned int color);
 //obj : オブジェクト型の変数、i : for文のi
 void DrawSquares(Object *obj,int &i);
 //自機とブロックの判定
+//obj1 : 自機、obj2 : ブロック,i : for文のi
 bool PtoOCollision(Object obj1, Object *obj2,int &i);
 
 //void OwnerCheck(int &timer,Vec2 &center)
@@ -68,17 +69,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		/// ↓更新処理ここから
 		
 		/*自機の移動処理*/
-		obj.Velocity.X = 0;
-		//obj.Velocity.Y = 0;
 
-		/*if (keys[DIK_W])
-		{
-			obj.Velocity.Y = -1;
-		}
-		if (keys[DIK_S])
-		{
-			obj.Velocity.Y = 1;
-		}*/
+		obj.Velocity.X = 0;
+		
 		if (keys[DIK_A])
 		{
 			obj.Velocity.X = -1;
@@ -95,7 +88,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 		obj.Center.X += obj.Velocity.X * obj.Spd;
-		//obj.Center.Y += obj.Velocity.Y * obj.Spd;
 
 		//タイマー処理
 		if (isObjAlive)
