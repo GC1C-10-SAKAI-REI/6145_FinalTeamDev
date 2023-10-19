@@ -8,10 +8,12 @@
 const char kWindowTitle[] = "6145_刹ニャのイタズラ";
 
 //矩形描画(単体)
+//center : 中心座標、rad : 半径、color : 色
 void DrawSquare(Vec2 &center, float rad, unsigned int color);
 //矩形描画(複数)
+//obj : オブジェクト型の変数、i : for文のi
 void DrawSquares(Object *obj,int &i);
-
+//自機とブロックの判定
 bool PtoOCollision(Object obj1, Object *obj2,int &i);
 
 //void OwnerCheck(int &timer,Vec2 &center)
@@ -24,7 +26,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
 	char preKeys[256] = {0};
-
+	
 	//自機
 	Object obj =
 	{
@@ -41,9 +43,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int ownerTimer = 0;
 
 	/*ブロック*/
-	Object block[3];
+	const int bNum = 2;
+	Object block[bNum];
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < bNum; i++)
 	{
 		block[i].Center.X = float(64 + i * 200);
 		block[i].Center.Y = 360.0f;
@@ -64,8 +67,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		/// ↓更新処理ここから
 		
+		/*自機の移動処理*/
 		obj.Velocity.X = 0;
+		//obj.Velocity.Y = 0;
 
+		/*if (keys[DIK_W])
+		{
+			obj.Velocity.Y = -1;
+		}
+		if (keys[DIK_S])
+		{
+			obj.Velocity.Y = 1;
+		}*/
 		if (keys[DIK_A])
 		{
 			obj.Velocity.X = -1;
@@ -75,8 +88,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			obj.Velocity.X = 1;
 		}
 
-		obj.Center.X += obj.Velocity.X * obj.Spd;
+		//※テストプレイ用に死亡フラグリセット
+		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+		{
+			isObjAlive = true;
+		}
 
+		obj.Center.X += obj.Velocity.X * obj.Spd;
+		//obj.Center.Y += obj.Velocity.Y * obj.Spd;
+
+		//タイマー処理
 		if (isObjAlive)
 		{
 			ownerTimer++;
@@ -86,14 +107,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 		}
 
-		for (int i = 0; i < 3; i++)
+		obj.Color = BLACK;
+
+		//当たり判定
+		for (int i = 0; i < bNum; i++)
 		{
 			if (PtoOCollision(obj,block,i))
 			{
-				isObjAlive = false;
+				obj.Color = RED;
+				Novice::ScreenPrintf(0, 20, "Alive", isObjAlive);
 			}
-		}
-		
+		}		
 		
 		/// ↑更新処理ここまで
 		
@@ -102,7 +126,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		/// ↓描画処理ここから
 		
 		//ブロック(隠れる場所)
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < bNum; i++)
 		{
 			DrawSquares(block, i);
 		}
@@ -111,12 +135,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 			DrawSquare(obj.Center, obj.Rad, obj.Color);
 		}
+
 		//デバッグ用
 		Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 60);
-		for (int i = 0; i < 3; i++)
-		{
-			Novice::ScreenPrintf(640, i * 20, "blockPosX = %f", block[i].Center.X);
-		}
 
 		/// ↑描画処理ここまで
 
@@ -149,6 +170,11 @@ bool PtoOCollision(Object obj1, Object* obj2, int& i)
 {
 	if (obj1.Center.X + obj1.Rad > obj2[i].Center.X - obj2[i].Rad && obj1.Center.X - obj1.Rad < obj2[i].Center.X + obj2[i].Rad)
 	{
+		//上下の判定が欲しくなったら解除してね～
+		/*if (obj1.Center.Y + obj1.Rad > obj2[i].Center.Y - obj2[i].Rad && obj1.Center.Y - obj1.Rad < obj2[i].Center.Y + obj2[i].Rad)
+		{
+			
+		}*/
 		return true;
 	}
 	return false;
