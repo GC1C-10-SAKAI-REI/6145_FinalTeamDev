@@ -168,10 +168,10 @@ void DrawSquares(Object* obj, int& i)
 
 bool PtoOCollision(Object obj1, Object* obj2, int& i)
 {
-	if (obj1.Center.X + obj1.Rad > obj2[i].Center.X - obj2[i].Rad && obj1.Center.X - obj1.Rad < obj2[i].Center.X + obj2[i].Rad)
+	if (obj1.Center.X - obj1.Rad > obj2[i].Center.X - obj2[i].Rad && obj1.Center.X + obj1.Rad < obj2[i].Center.X + obj2[i].Rad)
 	{
 		//上下の判定が欲しくなったら解除してね～
-		/*if (obj1.Center.Y + obj1.Rad > obj2[i].Center.Y - obj2[i].Rad && obj1.Center.Y - obj1.Rad < obj2[i].Center.Y + obj2[i].Rad)
+		/*if (obj1.Center.Y - obj1.Rad > obj2[i].Center.Y - obj2[i].Rad && obj1.Center.Y + obj1.Rad < obj2[i].Center.Y + obj2[i].Rad)
 		{
 			
 		}*/
