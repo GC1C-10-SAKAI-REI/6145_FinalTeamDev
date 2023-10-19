@@ -7,7 +7,12 @@
 
 const char kWindowTitle[] = "6145_刹ニャのイタズラ";
 
-void DrawSquare(Vec2& center, float rad, unsigned int color);
+//矩形描画(単体)
+void DrawSquare(Vec2 &center, float rad, unsigned int color);
+//矩形描画(複数)
+void DrawSquares(Object *obj,int &i);
+
+bool PtoOCollision(Object obj1, Object *obj2,int &i);
 
 //void OwnerCheck(int &timer,Vec2 &center)
 
@@ -34,6 +39,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//振り向くまでの時間
 	int ownerTimer = 0;
+
+	/*ブロック*/
+	Object block[3];
+
+	for (int i = 0; i < 3; i++)
+	{
+		block[i].Center.X = float(64 + i * 200);
+		block[i].Center.Y = 360.0f;
+		block[i].Rad = 64.0f;
+		block[i].Spd = 0.0f;
+		block[i].Color = WHITE;
+	}
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -68,6 +85,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				ownerTimer = 0;
 			}
 		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			if (PtoOCollision(obj,block,i))
+			{
+				isObjAlive = false;
+			}
+		}
+		
 		
 		/// ↑更新処理ここまで
 		
@@ -75,13 +101,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		
 		/// ↓描画処理ここから
 		
+		//ブロック(隠れる場所)
+		for (int i = 0; i < 3; i++)
+		{
+			DrawSquares(block, i);
+		}
 		// 自機
 		if (isObjAlive)
 		{
 			DrawSquare(obj.Center, obj.Rad, obj.Color);
 		}
-		// 
+		//デバッグ用
 		Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 60);
+		for (int i = 0; i < 3; i++)
+		{
+			Novice::ScreenPrintf(640, i * 20, "blockPosX = %f", block[i].Center.X);
+		}
 
 		/// ↑描画処理ここまで
 
@@ -100,7 +135,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	return 0;
 }
 
-void DrawSquare(Vec2& center, float rad, unsigned int color)
+void DrawSquare(Vec2 &center, float rad, unsigned int color)
 {
 	Novice::DrawBox(int(center.X - rad), int(center.Y - rad), int(rad * 2), int(rad * 2), 0, color, kFillModeSolid);
+}
+
+void DrawSquares(Object* obj, int& i)
+{
+	Novice::DrawBox(int(obj[i].Center.X - obj[i].Rad), int(obj[i].Center.Y - obj[i].Rad), int(obj[i].Rad * 2), int(obj[i].Rad * 2), 0, obj[i].Color, kFillModeSolid);
+}
+
+bool PtoOCollision(Object obj1, Object* obj2, int& i)
+{
+	if (obj1.Center.X + obj1.Rad > obj2[i].Center.X - obj2[i].Rad && obj1.Center.X - obj1.Rad < obj2[i].Center.X + obj2[i].Rad)
+	{
+		return true;
+	}
+	return false;
 }
