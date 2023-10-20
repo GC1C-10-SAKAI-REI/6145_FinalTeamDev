@@ -15,29 +15,52 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
-	Object player;
-	Object _object;//落とすオブジェクト
-	Object object_heavy;
+	Object player =
+	{
+		{200,200},
+		{1,1},
+		16,
+		4,
+		WHITE
+	};
+	//落とす軽いオブジェクト
+	Object _object =
+	{
+		{400,200},
+		{0,0},
+		16,
+		0,
+		BLACK
+	};
+	//落とす重いオブジェクト
+	Object object_heavy =
+	{
+		{600,200},
+		{0,0},
+		16,
+		0,
+		RED
+	};
 
 	//(動作確認用の情報)
-	player.Center.X = 200;
-	player.Center.Y = 200;
-	player.Rad = 16;
-	player.Color = WHITE;
-	player.Spd = 4;
-	player.Velocity.X = 1;
+	//player.Center.X = 200;
+	//player.Center.Y = 200;
+	//player.Rad = 16;
+	//player.Color = WHITE;
+	//player.Spd = 4;
+	//player.Velocity.X = 1;
 
-	_object.Center.X = 400;
-	_object.Center.Y = 220;
-	_object.Rad = 16;
-	_object.Color = BLACK;
-	_object.Spd = 4;
+	//_object.Center.X = 400;
+	//_object.Center.Y = 220;
+	//_object.Rad = 16;
+	//_object.Color = BLACK;
+	//_object.Spd = 4;
 
-	object_heavy.Center.X = 600;
-	object_heavy.Center.Y = 220;
-	object_heavy.Rad = 16;
-	object_heavy.Color = RED;
-	object_heavy.Spd = 4;
+	//object_heavy.Center.X = 600;
+	//object_heavy.Center.Y = 220;
+	//object_heavy.Rad = 16;
+	//object_heavy.Color = RED;
+	//object_heavy.Spd = 4;
 
 	int object_life = 10;
 
@@ -57,13 +80,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int heavy_respwanTimer = 0;
 
 	enum Scene {
-		TITLE,     //0
+		TITLE,     //0(各数値の初期化はタイトルで行う予定)
 		TUTORIAL,  //1
-		GAMEPLAY,    //2
+		GAMEPLAY,  //2
 		GAMEOVER,  //3
 	};
 	int game = TITLE;
-	int select = 0;
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
 	{
@@ -81,14 +103,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		case 0://title
 			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
 			{
-				select = 1;
 				game = TUTORIAL;
 				playerAlive = true;
 			}break;
 		case 1://tutorial
 			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
 			{
-				select = 2;
 				game = GAMEPLAY;
 			}break;
 		case 2://gameplay
@@ -216,7 +236,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						object_life = 10;
 					}
 				}
-								//デバック用↓
+				//デバック用↓
 				if (keys[DIK_J] && preKeys[DIK_J] == 0)
 				{
 					playerAlive = false;
@@ -226,13 +246,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 			else 
 			{
-				select = 3;
 				game = GAMEOVER;
 			}break;
 		case 3://gameover
 			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
 			{
-				select = 1;
 				game = TITLE;
 			}break;
 		}
