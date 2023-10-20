@@ -53,8 +53,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		block[i].Spd = 0.0f;
 		block[i].Color = WHITE;
 	}
-
+	//true：隠れている false：はみ出てる
 	bool isHyding[bNum] = { false };
+	bool flag = false;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -93,32 +94,43 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//当たり判定
 		for (int i = 0; i < bNum; i++)
 		{
-			isHyding[i] = PtoOCollision(obj, block, i);
-			//
-			if (isHyding[i])
-			{
-				obj.Color = RED;
-				isObjAlive = true;
-			}
 			if (isObjAlive)
 			{
 				//タイマー処理
-				ownerTimer++;
-								
-				if (!isHyding[i])
-				{
-					if (ownerTimer == 300)
-					{
-						isObjAlive = false;
-					}
-				}
+				isHyding[i] = PtoOCollision(obj, block, i);
 
-				if (ownerTimer > 300)
+				if (isHyding[i])
 				{
-					ownerTimer = 0;
+					flag = true;
+					break;
+				}
+				else
+				{
+					flag = false;
 				}
 			}
-		}		
+		}
+		for (int i = 0; i < bNum; i++)
+		{
+			if (isObjAlive)
+			{
+				ownerTimer++;
+			}
+
+			if (flag)
+			{
+				obj.Color = RED;
+			}
+			else if (!flag && ownerTimer == 495)
+			{
+				isObjAlive = false;
+			}
+
+			if (ownerTimer > 495)
+			{
+				ownerTimer = 0;
+			}
+		}
 		
 		/// ↑更新処理ここまで
 		
@@ -138,9 +150,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 		//デバッグ用
-		Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 60);
+		Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 165);
 		Novice::ScreenPrintf(0, 20, "isHyding1 = %d", isHyding[0]);
 		Novice::ScreenPrintf(0, 40, "isHyding2 = %d", isHyding[1]);
+		Novice::ScreenPrintf(0, 60, "isAlive = %d", isObjAlive);
+		Novice::ScreenPrintf(0, 80, "flag = %d", flag);
 
 		/// ↑描画処理ここまで
 
