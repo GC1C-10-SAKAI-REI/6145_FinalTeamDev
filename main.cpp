@@ -87,7 +87,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		else {
 			runFlag = false;
 		}
-
+		　
 		//オブジェクトとプレイヤーの当たり判定
 		if (_object.Center.X - 16 < player.Center.X + 16 && player.Center.X < _object.Center.X + 32)
 		{
