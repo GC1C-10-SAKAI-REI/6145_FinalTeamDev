@@ -17,8 +17,6 @@ void DrawSquares(Object *obj,int &i);
 //obj1 : 自機、obj2 : ブロック,i : for文のi
 bool PtoOCollision(Object obj1, Object *obj2,int &i);
 
-//void OwnerCheck(int &timer,Vec2 &center)
-
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// ライブラリの初期化
@@ -56,6 +54,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		block[i].Color = WHITE;
 	}
 
+	bool isHyding[bNum] = { false };
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
 	{
@@ -69,7 +69,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		/// ↓更新処理ここから
 		
 		/*自機の移動処理*/
-
 		obj.Velocity.X = 0;
 		
 		if (keys[DIK_A])
@@ -81,22 +80,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			obj.Velocity.X = 1;
 		}
 
+		obj.Center.X += obj.Velocity.X * obj.Spd;
+
 		//※テストプレイ用に死亡フラグリセット
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 		{
 			isObjAlive = true;
-		}
-
-		obj.Center.X += obj.Velocity.X * obj.Spd;
-
-		//タイマー処理
-		if (isObjAlive)
-		{
-			ownerTimer++;
-			if (ownerTimer >= 300)
-			{
-				ownerTimer = 0;
-			}
 		}
 
 		obj.Color = BLACK;
@@ -104,10 +93,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//当たり判定
 		for (int i = 0; i < bNum; i++)
 		{
-			if (PtoOCollision(obj,block,i))
+			isHyding[i] = PtoOCollision(obj, block, i);
+			//
+			if (isHyding[i])
 			{
 				obj.Color = RED;
-				Novice::ScreenPrintf(0, 20, "Alive", isObjAlive);
+				isObjAlive = true;
+			}
+			if (isObjAlive)
+			{
+				//タイマー処理
+				ownerTimer++;
+								
+				if (!isHyding[i])
+				{
+					if (ownerTimer == 300)
+					{
+						isObjAlive = false;
+					}
+				}
+
+				if (ownerTimer > 300)
+				{
+					ownerTimer = 0;
+				}
 			}
 		}		
 		
@@ -130,6 +139,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		//デバッグ用
 		Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 60);
+		Novice::ScreenPrintf(0, 20, "isHyding1 = %d", isHyding[0]);
+		Novice::ScreenPrintf(0, 40, "isHyding2 = %d", isHyding[1]);
 
 		/// ↑描画処理ここまで
 
@@ -170,4 +181,4 @@ bool PtoOCollision(Object obj1, Object* obj2, int& i)
 		return true;
 	}
 	return false;
-}
+}	
