@@ -17,7 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	char preKeys[256] = {0};
 	Object player;
 	Object _object;//落とすオブジェクト
-	Object object_heavy;
+	//Object object_heavy;
 
 	//(動作確認用の情報)
 	player.Center.X = 200;
@@ -33,30 +33,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	_object.Color = BLACK;
 	_object.Spd = 4;
 
-	object_heavy.Center.X = 600;
-	object_heavy.Center.Y = 220;
-	object_heavy.Rad = 16;
-	object_heavy.Color = RED;
-	object_heavy.Spd = 4;
+	//object_heavy.Center.X = 600;
+	//object_heavy.Center.Y = 220;
+	//object_heavy.Rad = 16;
+	//object_heavy.Color = BLACK;
+	//object_heavy.Spd = 4;
 	
-	int object_life = 10;
-
-	bool light_colliFlag = false;
-	bool heavy_colliFlag = false;
-
+	//int object_life = 3;
+	int color = WHITE;
+	bool testFlag = false;
 	bool runFlag = false;
-
-	bool attackFlag = false;
-	bool heavy_attackFlag = false;
-
+	bool hitFlag = false;
 	bool aliveFlag = true;
-	bool heavy_aliveFlag = true;
-
 	int respwanTimer = 0;
-	int heavy_respwanTimer = 0;
-
-	//int heavy_restTimer = 0;
-	//bool heavy_restFlag = false;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -74,172 +63,88 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//歩き
 		if (keys[DIK_A])
 		{
-			player.Center.X -= player.Spd * player.Velocity.X;
-			if (keys[DIK_RETURN])
-			{
-				runFlag = true;
-				player.Velocity.X = 2;
-			}
-			else {
-				runFlag = false;
-				player.Velocity.X = 1;
-			}
+			player.Center.X -= player.Spd;
 		}
 		if (keys[DIK_D])
 		{
-			player.Center.X += player.Spd * player.Velocity.X;
-			if (keys[DIK_RETURN])
-			{
-				runFlag = true;
-				player.Velocity.X = 2;
-			}
-			else {
-				runFlag = false;
-				player.Velocity.X = 1;
-			}
+			player.Center.X += player.Spd;
 		}
 
-		////ダッシュ
-		//if (keys[DIK_RETURN])
-		//{
-		//	if (keys[DIK_A])
-		//	{
-		//		player.Center.X -= player.Spd * player.Velocity.X;
-		//	}
-		//	if (keys[DIK_D])
-		//	{
-		//		player.Center.X += player.Spd * player.Velocity.X;
-		//	}
-		//}
-		if (aliveFlag == true)
+		//ダッシュ
+		if (keys[DIK_RETURN])
 		{
-			//オブジェクトとプレイヤーの当たり判定
-			if (_object.Center.X - 16 < player.Center.X + 16 && player.Center.X < _object.Center.X + 32)
+			runFlag = true;
+			player.Velocity.X = 2;
+			if (keys[DIK_A])
 			{
-				light_colliFlag = true;
-				if (runFlag == true)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
-				{
-					attackFlag = true;
-					aliveFlag = false;
-				}
+				player.Center.X -= player.Spd * player.Velocity.X;
 			}
-			else//そうでなければ落ちない
+			if (keys[DIK_D])
 			{
-				light_colliFlag = false;
-			}
-			//接触中にスペースキーを押すとオブジェクトを落とす
-			if (light_colliFlag == true)
-			{
-				if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
-				{
-					attackFlag = true;
-					aliveFlag = false;
-				}
+				player.Center.X += player.Spd * player.Velocity.X;
 			}
 		}
+		else {
+			runFlag = false;
+		}
 
-		if (heavy_aliveFlag == true)
+		//オブジェクトとプレイヤーの当たり判定
+		if (_object.Center.X - 16 < player.Center.X + 16 && player.Center.X < _object.Center.X + 32)
 		{
-			//ヘビーオブジェクトとプレイヤーの当たり判定
-			if (object_heavy.Center.X - 16 < player.Center.X + 16 && player.Center.X < object_heavy.Center.X + 32)
+			testFlag = true;
+			if (runFlag == true)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 			{
-				heavy_colliFlag = true;
-				if (runFlag == true)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
-				{
-					heavy_attackFlag = true;
-					//heavy_aliveFlag = false;
-					object_life -= 1;
-				}
+				color = BLACK;
+				hitFlag = true;
+				aliveFlag = false;
 			}
-			else//そうでなければ落ちない
-			{
-				heavy_colliFlag = false;
-			}
+		}
+		else//そうでなければ落ちない
+		{
+			testFlag = false;
+		}
 
-			//ヘビーオブジェクトのライフが０になったら消える
-			if (object_life <= 0)
+		//接触中にスペースキーを押すとオブジェクトを落とす
+		if (testFlag == true)
+		{
+			if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
 			{
-				heavy_aliveFlag = false;
+				color = BLACK;
+				hitFlag = true;
+				aliveFlag = false;
 			}
-			//接触中にスペースキーを押すとヘビーオブジェクトを落とす
-			if (heavy_colliFlag == true)
-			{
-				if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
-				{
-					heavy_attackFlag = true;
-					//heavy_aliveFlag = false;
-					object_life -= 1;
-				}
-			}
-			//ヘビーオブジェクトの無敵？時間
-			//if (heavy_restFlag == true)
-			//{
-			//	heavy_restTimer++;
-			//	heavy_attackFlag = false;
-			//}
-			//if (heavy_restTimer > 50)
-			//{
-			//	heavy_restTimer = 0;
-			//	heavy_restFlag = false;
-			//}
+		}
+		else//そうでなければ落ちない
+		{
+			color = WHITE;
 		}
 		
 		//オブジェクトが落ちた
-		if (attackFlag == true)
+		if (hitFlag == true)
 		{
-			light_colliFlag = false;
+			testFlag = false;
 			respwanTimer++;
-		}
-
-		//ヘビーオブジェクトが落ちた
-		if (heavy_attackFlag == true && object_life <= 0)
-		{
-			heavy_colliFlag = false;
-			heavy_respwanTimer++;
 		}
 
 		//オブジェクト復活
 		if (respwanTimer > 100)
 		{
-			if (aliveFlag == false)
-			{
-				aliveFlag = true;
-				respwanTimer = 0;
-				attackFlag = false;
-			}
+			aliveFlag = true;
+			respwanTimer = 0;
+			hitFlag = false;
 		}
-		if (heavy_respwanTimer > 100)
-		{
-			if (heavy_aliveFlag == false)
-			{
-				heavy_aliveFlag = true;
-				heavy_attackFlag = false;
-				heavy_respwanTimer = 0;
-				object_life = 10;
-			}
-		}
-
-
 		/// ↑更新処理ここまで
 		
 
 		
 		/// ↓描画処理ここから
 		DrawSquare(player.Center, player.Rad, player.Color);
-		if (heavy_aliveFlag == true)
-		{
-			DrawSquare(object_heavy.Center, object_heavy.Rad, object_heavy.Color);
-		}
 		if (aliveFlag == true)
 		{
 			DrawSquare(_object.Center, _object.Rad, _object.Color);
 		}
 		Novice::ScreenPrintf(0, 0, "RunFlag=%d", runFlag);
-		Novice::ScreenPrintf(0, 15, "object_life=%d", object_life);
-		Novice::ScreenPrintf(0, 30, "heavy_colliFlag=%d", heavy_colliFlag);
-		//Novice::ScreenPrintf(0, 45, "heavy_restTimer=%d", heavy_restTimer);
-		Novice::ScreenPrintf(0, 60, "heavy_respwanTimer=%d", heavy_respwanTimer);
-
+		Novice::ScreenPrintf(0, 15, "testFlag=%d", testFlag);
 
 		/// ↑描画処理ここまで
 
