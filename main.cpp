@@ -3,19 +3,9 @@
 #define WORLD_WIDTH 3840
 
 #include <Novice.h>
-#include "Struct.h"
+#include "FuncLib.h"
 
 const char kWindowTitle[] = "6145_刹ニャのイタズラ";
-
-//矩形描画(単体)
-//center : 中心座標、rad : 半径、color : 色
-void DrawSquare(Vec2 &center, float rad, unsigned int color);
-//矩形描画(複数)
-//obj : オブジェクト型の変数、i : for文のi
-void DrawSquares(Object *obj,int &i);
-//自機とブロックの判定
-//obj1 : 自機、obj2 : ブロック,i : for文のi
-bool PtoOCollision(Object obj1, Object *obj2,int &i);
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -55,7 +45,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	}
 	//true：隠れている false：はみ出てる
 	bool isHyding[bNum] = { false };
-	bool flag = false;
+	bool safeFlag = false;
+
+	FuncLib *fLib = new FuncLib();
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -89,6 +81,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			isObjAlive = true;
 		}
 
+		//隠れていない時に黒くする
 		obj.Color = BLACK;
 
 		//当たり判定
@@ -96,32 +89,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 			if (isObjAlive)
 			{
-				//タイマー処理
-				isHyding[i] = PtoOCollision(obj, block, i);
+				isHyding[i] = fLib->PtoOCollision(obj, block, i);
 
+				//もし隠れていたら
 				if (isHyding[i])
 				{
-					flag = true;
+					safeFlag = true;
 					break;
 				}
 				else
 				{
-					flag = false;
+					safeFlag = false;
 				}
 			}
 		}
+		//プレイヤーの死亡条件
 		for (int i = 0; i < bNum; i++)
 		{
+			//タイマー処理
 			if (isObjAlive)
 			{
 				ownerTimer++;
 			}
 
-			if (flag)
+			if (safeFlag)
 			{
 				obj.Color = RED;
 			}
-			else if (!flag && ownerTimer == 495)
+			else if (!safeFlag && ownerTimer == 495)
 			{
 				isObjAlive = false;
 			}
@@ -141,20 +136,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//ブロック(隠れる場所)
 		for (int i = 0; i < bNum; i++)
 		{
-			DrawSquares(block, i);
+			fLib->DrawSquares(block, i);
 		}
 		// 自機
 		if (isObjAlive)
 		{
-			DrawSquare(obj.Center, obj.Rad, obj.Color);
+			fLib->DrawSquare(obj.Center, obj.Rad, obj.Color);
 		}
 
 		//デバッグ用
 		Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 165);
-		Novice::ScreenPrintf(0, 20, "isHyding1 = %d", isHyding[0]);
-		Novice::ScreenPrintf(0, 40, "isHyding2 = %d", isHyding[1]);
-		Novice::ScreenPrintf(0, 60, "isAlive = %d", isObjAlive);
-		Novice::ScreenPrintf(0, 80, "flag = %d", flag);
+		Novice::ScreenPrintf(0, 20, "isAlive = %d", isObjAlive);
 
 		/// ↑描画処理ここまで
 
@@ -172,27 +164,3 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Novice::Finalize();
 	return 0;
 }
-
-void DrawSquare(Vec2 &center, float rad, unsigned int color)
-{
-	Novice::DrawBox(int(center.X - rad), int(center.Y - rad), int(rad * 2), int(rad * 2), 0, color, kFillModeSolid);
-}
-
-void DrawSquares(Object* obj, int& i)
-{
-	Novice::DrawBox(int(obj[i].Center.X - obj[i].Rad), int(obj[i].Center.Y - obj[i].Rad), int(obj[i].Rad * 2), int(obj[i].Rad * 2), 0, obj[i].Color, kFillModeSolid);
-}
-
-bool PtoOCollision(Object obj1, Object* obj2, int& i)
-{
-	if (obj1.Center.X - obj1.Rad > obj2[i].Center.X - obj2[i].Rad && obj1.Center.X + obj1.Rad < obj2[i].Center.X + obj2[i].Rad)
-	{
-		//上下の判定が欲しくなったら解除してね～
-		/*if (obj1.Center.Y - obj1.Rad > obj2[i].Center.Y - obj2[i].Rad && obj1.Center.Y + obj1.Rad < obj2[i].Center.Y + obj2[i].Rad)
-		{
-			
-		}*/
-		return true;
-	}
-	return false;
-}	
