@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	unsigned int currentTime = (unsigned int)time(nullptr);
 	srand(currentTime);
 
-	int number[5] = { rand() ,rand() ,rand() ,rand() ,rand() };
+	int number[5] = { 0 };
 #pragma region //Objecet
 
 
@@ -41,11 +41,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	int positionFlag[5] = { 1,1,1,1,1 };
 
-	int hpA = 100;
-	int hpB = 150;
+
 
 	int objectHp[5] = { 0 };
 	int objectFlag[5] = { 0 };
+	int responcount[5] = { 0 };
+#pragma endregion
+
+#pragma region //テスト用関数
+	int hpA = 1;
+	int hpB = 3;
 #pragma endregion
 
 
@@ -67,48 +72,80 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 
+
+
 		for (int i = 0; i < 5; i++)
 		{
-			objectHp[i]--;
+
 			//life分け
-			if (objectHp[i] <= 0 && number[i] % 2 == 0)
+			if (positionFlag[i] == 1 && objectHp[i] <= 0)
 			{
-				objectHp[i] = hpA;
-
-			}
-			if (objectHp[i] <= 0 && number[i] % 2 == 1)
-			{
-				objectHp[i] = hpB;
-
+				number[i] = rand();
+				if (number[i] % 2 == 0)
+				{
+					objectHp[i] = hpA;
+				}
+				if (number[i] % 2 == 1)
+				{
+					objectHp[i] = hpB;
+				}
 			}
 
 			//軽いものと重いもの分け
 			if ((positionFlag[i] == 1) && (objectHp[i] == hpA))
 			{
 				objectFlag[i] = 0; //軽いもの
-				
-
 			}
 
 			if ((positionFlag[i] == 1) && (objectHp[i] == hpB))
 			{
 				objectFlag[i] = 1; //重いもの
-				
+
 			}
 
+
 			//テスト用
-			if (objectFlag[i] == 0 && objectHp[i] == hpA)
+			if (Novice::CheckHitKey(DIK_0))
 			{
-				number[i] %= 2;
+				objectHp[0] -= 3;
 			}
-			if (objectFlag[i] == 1 && objectHp[i] == hpB)
+
+			if (Novice::CheckHitKey(DIK_1))
 			{
-				number[i] %= 2;
+				objectHp[1] -= 3;
+			}
+
+			if (Novice::CheckHitKey(DIK_2))
+			{
+				objectHp[2] -= 3;
+			}
+
+			if (Novice::CheckHitKey(DIK_3))
+			{
+				objectHp[3] -= 3;
+			}
+			if (Novice::CheckHitKey(DIK_4))
+			{
+				objectHp[4] -= 3;
+			}
+
+			//Objcet再生成
+			if (objectHp[i] <= 0)
+			{
+				positionFlag[i] = 0;
+				responcount[i]++;
+			}
+
+			if (responcount[i] >= 100)
+			{
+				positionFlag[i] = 1;
+				responcount[i] = 0;
 			}
 
 
 
 		}
+
 
 
 		/// ↑更新処理ここまで
@@ -119,28 +156,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 #pragma region  //テストテキスト
-		for (int i = 0; i < 5; i++)
-		{
-			Novice::ScreenPrintf(20, 40, "hpA %d\n", objectHp[0]);
-			Novice::ScreenPrintf(20, 50, "hpB %d\n", objectHp[1]);
-			Novice::ScreenPrintf(20, 60, "hpC %d\n", objectHp[2]);
-			Novice::ScreenPrintf(20, 70, "hpD %d\n", objectHp[3]);
-			Novice::ScreenPrintf(20, 80, "hpE %d\n", objectHp[4]);
+		Novice::ScreenPrintf(20, 50, "hpB %d\n", objectHp[1]);
+		Novice::ScreenPrintf(20, 70, "responcount %d\n", responcount[1]);
+		Novice::ScreenPrintf(20, 90, "positionFlag %d\n", positionFlag[1]);
 
-		}
 #pragma endregion
 
 
 
 		for (int i = 0; i < 5; i++)
 		{
-			if (objectFlag[i] == 0)
+			if (objectFlag[i] == 0 && positionFlag[i] == 1)
 			{
 				object[i].Color = RED;
 				DrawSquare(object[i].Center, object[i].Rad, object[i].Color);
 
 			}
-			if (objectFlag[i] == 1)
+			if (objectFlag[i] == 1 && positionFlag[i] == 1)
 			{
 				object[i].Color = GREEN;
 				DrawSquare(object[i].Center, object[i].Rad, object[i].Color);
