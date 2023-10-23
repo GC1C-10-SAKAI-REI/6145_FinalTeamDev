@@ -59,7 +59,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	/*ブロック*/
 	const int bNum = 2;
 	Object block[bNum];
-
+	//初期化
 	for (int i = 0; i < bNum; i++)
 	{
 		block[i].Center.X = float(64 + i * 200);
@@ -106,98 +106,123 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 
 		case GAMEPLAY:
+
+			/*自機の移動処理*/
+			player.Velocity.X = 0;
+
+			if (keys[DIK_A])
+			{
+				player.Velocity.X = -1;
+			}
+			if (keys[DIK_D])
+			{
+				player.Velocity.X = 1;
+			}
+
+			player.Center.X += player.Velocity.X * player.Spd;
+
+			//※テストプレイ用に死亡フラグリセット
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+			{
+				isObjAlive = true;
+			}
+
+			//隠れていない時に黒くする
+			player.Color = BLACK;
+
+			//当たり判定
+			for (int i = 0; i < bNum; i++)
+			{
+				if (isObjAlive)
+				{
+					isHyding[i] = fLib->PtoOCollision(player, block, i);
+
+					//もし隠れていたら
+					if (isHyding[i])
+					{
+						safeFlag = true;
+						break;
+					}
+					else
+					{
+						safeFlag = false;
+					}
+				}
+			}
+			//プレイヤーの死亡条件
+			for (int i = 0; i < bNum; i++)
+			{
+				//タイマー処理
+				if (isObjAlive)
+				{
+					ownerTimer++;
+				}
+
+				if (safeFlag)
+				{
+					player.Color = RED;
+				}
+				else if (!safeFlag && ownerTimer == 495)
+				{
+					isObjAlive = false;
+				}
+
+				if (ownerTimer > 495)
+				{
+					ownerTimer = 0;
+				}
+			}
+
 			break;
 
 		case GAMEOVER:
 			break;
 		}
 		
-		/*自機の移動処理*/
-		player.Velocity.X = 0;
 		
-		if (keys[DIK_A])
-		{
-			player.Velocity.X = -1;
-		}
-		if(keys[DIK_D])
-		{
-			player.Velocity.X = 1;
-		}
-
-		player.Center.X += player.Velocity.X * player.Spd;
-
-		//※テストプレイ用に死亡フラグリセット
-		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
-		{
-			isObjAlive = true;
-		}
-
-		//隠れていない時に黒くする
-		player.Color = BLACK;
-
-		//当たり判定
-		for (int i = 0; i < bNum; i++)
-		{
-			if (isObjAlive)
-			{
-				isHyding[i] = fLib->PtoOCollision(player, block, i);
-
-				//もし隠れていたら
-				if (isHyding[i])
-				{
-					safeFlag = true;
-					break;
-				}
-				else
-				{
-					safeFlag = false;
-				}
-			}
-		}
-		//プレイヤーの死亡条件
-		for (int i = 0; i < bNum; i++)
-		{
-			//タイマー処理
-			if (isObjAlive)
-			{
-				ownerTimer++;
-			}
-
-			if (safeFlag)
-			{
-				player.Color = RED;
-			}
-			else if (!safeFlag && ownerTimer == 495)
-			{
-				isObjAlive = false;
-			}
-
-			if (ownerTimer > 495)
-			{
-				ownerTimer = 0;
-			}
-		}
 		
 		/// ↑更新処理ここまで
 		
 
 		
 		/// ↓描画処理ここから
-		
-		//ブロック(隠れる場所)
-		for (int i = 0; i < bNum; i++)
-		{
-			fLib->DrawSquares(block, i);
-		}
-		// 自機
-		if (isObjAlive)
-		{
-			fLib->DrawSquare(player.Center, player.Rad, player.Color);
-		}
 
-		//デバッグ用
-		Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 165);
-		Novice::ScreenPrintf(0, 20, "isAlive = %d", isObjAlive);
+		switch (scene)
+		{
+		case TITLE:
+
+
+
+			break;
+
+		case TUTORIAL:
+
+
+
+			break;
+
+		case GAMEPLAY:
+
+			//ブロック(隠れる場所)
+			for (int i = 0; i < bNum; i++)
+			{
+				fLib->DrawSquares(block, i);
+			}
+			// 自機
+			if (isObjAlive)
+			{
+				fLib->DrawSquare(player.Center, player.Rad, player.Color);
+			}
+
+			//デバッグ用
+			Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 165);
+			Novice::ScreenPrintf(0, 20, "isAlive = %d", isObjAlive);
+
+			break;
+
+		case GAMEOVER:
+			break;
+		}
 
 		/// ↑描画処理ここまで
 
