@@ -17,6 +17,7 @@ typedef struct Object
 
 typedef struct fallenObj
 {
+	Object Info;
 	bool ColFlag;
 	bool AtackFlag;
 	bool IsAlive;
