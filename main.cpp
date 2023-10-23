@@ -29,10 +29,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		BLACK
 	};
 	//true：生きてる false：死んでる
-	bool isObjAlive = true;
+	bool isPAlive = true;
 
 	//オブジェクトのライフ
-	int object_life = 10;
+	int objLife = 3;
 
 	//自機と当たっているかのフラグ
 	bool light_colliFlag = false;
@@ -44,7 +44,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	bool heavy_attackFlag = false;
 
 	//各生存フラグ
-	bool playerAlive = true;
+	bool isPAlive = true;
 	bool aliveFlag = true;
 	bool heavy_aliveFlag = true;
 
@@ -100,6 +100,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE:
 
+			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
+			{
+				scene = TUTORIAL;
+				isPAlive = true;
+				objLife = 10;
+			}
+
 			break;
 
 		case TUTORIAL:
@@ -124,7 +131,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//※テストプレイ用に死亡フラグリセット
 			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 			{
-				isObjAlive = true;
+				isPAlive = true;
 			}
 
 			//隠れていない時に黒くする
@@ -133,7 +140,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//当たり判定
 			for (int i = 0; i < bNum; i++)
 			{
-				if (isObjAlive)
+				if (isPAlive)
 				{
 					isHyding[i] = fLib->PtoOCollision(player, block, i);
 
@@ -153,7 +160,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			for (int i = 0; i < bNum; i++)
 			{
 				//タイマー処理
-				if (isObjAlive)
+				if (isPAlive)
 				{
 					ownerTimer++;
 				}
@@ -164,7 +171,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 				else if (!safeFlag && ownerTimer == 495)
 				{
-					isObjAlive = false;
+					isPAlive = false;
 				}
 
 				if (ownerTimer > 495)
@@ -209,14 +216,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				fLib->DrawSquares(block, i);
 			}
 			// 自機
-			if (isObjAlive)
+			if (isPAlive)
 			{
 				fLib->DrawSquare(player.Center, player.Rad, player.Color);
 			}
 
 			//デバッグ用
 			Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 165);
-			Novice::ScreenPrintf(0, 20, "isAlive = %d", isObjAlive);
+			Novice::ScreenPrintf(0, 20, "isAlive = %d", isPAlive);
 
 			break;
 
