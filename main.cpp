@@ -17,7 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	char preKeys[256] = {0};
 	
 	//自機
-	Object obj =
+	Object player =
 	{
 		{640,360},
 		{0,0},
@@ -62,18 +62,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		/// ↓更新処理ここから
 		
 		/*自機の移動処理*/
-		obj.Velocity.X = 0;
+		player.Velocity.X = 0;
 		
 		if (keys[DIK_A])
 		{
-			obj.Velocity.X = -1;
+			player.Velocity.X = -1;
 		}
 		if(keys[DIK_D])
 		{
-			obj.Velocity.X = 1;
+			player.Velocity.X = 1;
 		}
 
-		obj.Center.X += obj.Velocity.X * obj.Spd;
+		player.Center.X += player.Velocity.X * player.Spd;
 
 		//※テストプレイ用に死亡フラグリセット
 		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
@@ -82,14 +82,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 		//隠れていない時に黒くする
-		obj.Color = BLACK;
+		player.Color = BLACK;
 
 		//当たり判定
 		for (int i = 0; i < bNum; i++)
 		{
 			if (isObjAlive)
 			{
-				isHyding[i] = fLib->PtoOCollision(obj, block, i);
+				isHyding[i] = fLib->PtoOCollision(player, block, i);
 
 				//もし隠れていたら
 				if (isHyding[i])
@@ -114,7 +114,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (safeFlag)
 			{
-				obj.Color = RED;
+				player.Color = RED;
 			}
 			else if (!safeFlag && ownerTimer == 495)
 			{
@@ -141,7 +141,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// 自機
 		if (isObjAlive)
 		{
-			fLib->DrawSquare(obj.Center, obj.Rad, obj.Color);
+			fLib->DrawSquare(player.Center, player.Rad, player.Color);
 		}
 
 		//デバッグ用
