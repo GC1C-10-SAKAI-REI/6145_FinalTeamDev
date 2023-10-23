@@ -48,15 +48,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	}
 	//true：隠れている false：はみ出てる
 	bool isHyding[bNum] = { false };
+	// オブジェクトの一つどれかに隠れてたらtrue
 	bool safeFlag = false;
 
 	//シーン切り替え用列挙体
 	enum Scene
 	{
-		TITLE,     //0(各数値の初期化はタイトルで行う予定)
-		TUTORIAL,  //1
-		GAMEPLAY,  //2
-		GAMEOVER,  //3
+		TITLE,   
+		TUTORIAL,
+		GAMEPLAY,
+		GAMEOVER,
 	};
 	//switch用変数
 	Scene scene = TITLE;
