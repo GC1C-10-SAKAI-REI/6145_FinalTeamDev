@@ -15,6 +15,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
+
 	Object player =
 	{
 		{200,200},
@@ -41,26 +42,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		0,
 		RED
 	};
-
-	//(動作確認用の情報)
-	//player.Center.X = 200;
-	//player.Center.Y = 200;
-	//player.Rad = 16;
-	//player.Color = WHITE;
-	//player.Spd = 4;
-	//player.Velocity.X = 1;
-
-	//_object.Center.X = 400;
-	//_object.Center.Y = 220;
-	//_object.Rad = 16;
-	//_object.Color = BLACK;
-	//_object.Spd = 4;
-
-	//object_heavy.Center.X = 600;
-	//object_heavy.Center.Y = 220;
-	//object_heavy.Rad = 16;
-	//object_heavy.Color = RED;
-	//object_heavy.Spd = 4;
 
 	int object_life = 10;
 
