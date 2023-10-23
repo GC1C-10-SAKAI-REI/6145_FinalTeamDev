@@ -15,6 +15,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
 	char preKeys[256] = {0};
+
+	//自作関数クラス
+	FuncLib* fLib = new FuncLib();
 	
 	//自機
 	Object player =
@@ -47,7 +50,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	bool isHyding[bNum] = { false };
 	bool safeFlag = false;
 
-	FuncLib *fLib = new FuncLib();
+	//シーン切り替え用列挙体
+	enum Scene
+	{
+		TITLE,     //0(各数値の初期化はタイトルで行う予定)
+		TUTORIAL,  //1
+		GAMEPLAY,  //2
+		GAMEOVER,  //3
+	};
+	//switch用変数
+	Scene scene = TITLE;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -60,6 +72,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Novice::GetHitKeyStateAll(keys);
 
 		/// ↓更新処理ここから
+
+		switch (scene)
+		{
+		case TITLE:
+
+			break;
+
+		case TUTORIAL:
+			break;
+
+		case GAMEPLAY:
+			break;
+
+		case GAMEOVER:
+			break;
+		}
 		
 		/*自機の移動処理*/
 		player.Velocity.X = 0;
