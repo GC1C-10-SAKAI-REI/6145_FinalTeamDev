@@ -14,3 +14,11 @@ typedef struct Object
 	float Spd;
 	unsigned int Color;
 } Object;
+
+typedef struct fallenObj
+{
+	bool ColFlag;
+	bool AtackFlag;
+	bool IsAlive;
+	int ResTimer;
+}fallenObj;

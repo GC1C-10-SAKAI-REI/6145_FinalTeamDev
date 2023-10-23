@@ -31,6 +31,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//true：生きてる false：死んでる
 	bool isObjAlive = true;
 
+	//オブジェクトのライフ
+	int object_life = 10;
+
+	//自機と当たっているかのフラグ
+	bool light_colliFlag = false;
+	bool heavy_colliFlag = false;
+	//走っているフラグ
+	bool runFlag = false;
+	//スペースを押したかどうか
+	bool attackFlag = false;
+	bool heavy_attackFlag = false;
+
+	//各生存フラグ
+	bool playerAlive = true;
+	bool aliveFlag = true;
+	bool heavy_aliveFlag = true;
+
+	//再出現させるタイマー
+	int respwanTimer = 0;
+	int heavy_respwanTimer = 0;
+
+	/*敵*/
 	//振り向くまでの時間
 	int ownerTimer = 0;
 
