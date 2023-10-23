@@ -15,7 +15,7 @@ typedef struct Object
 	unsigned int Color;
 } Object;
 
-typedef struct fallenObj
+typedef struct FallenObj
 {
 	Object Info;
 	bool ColFlag;

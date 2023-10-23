@@ -31,6 +31,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//true：生きてる false：死んでる
 	bool isPAlive = true;
 
+	FallenObj lightObj =
+	{
+		{
+			{0,0},
+			{0,0},
+			32,
+			0,
+			GREEN
+		},
+		false,
+		false,
+		true,
+		0
+	};
+
 	//オブジェクトのライフ
 	int objLife = 3;
 
