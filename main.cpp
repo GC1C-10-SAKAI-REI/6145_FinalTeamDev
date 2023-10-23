@@ -1,5 +1,7 @@
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
+#define WORLD_WIDTH 3840
+
 #include <Novice.h>
 #include "Struct.h"
 
@@ -14,6 +16,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
+	unsigned int color = 0xFF000000;
+	int cFlag = 0;
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
 	{
@@ -26,7 +31,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		/// ↓更新処理ここから
 		
-
+		if (cFlag % 2 == 0)
+		{
+			color++;
+		}
+		if (color >= 0xFF0000FF)
+		{
+			cFlag++;
+		}
 		
 		/// ↑更新処理ここまで
 		
@@ -34,7 +46,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		
 		/// ↓描画処理ここから
 		
-
+		Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, color, kFillModeSolid);
 		
 		/// ↑描画処理ここまで
 
