@@ -86,6 +86,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		GAMEOVER,  //3
 	};
 	int game = TITLE;
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
 	{
@@ -105,6 +106,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				game = TUTORIAL;
 				playerAlive = true;
+				object_life = 10;
 			}break;
 		case 1://tutorial
 			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
