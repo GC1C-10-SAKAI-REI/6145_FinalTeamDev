@@ -34,23 +34,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//オブジェクトのライフ
 	int objLife = 3;
 
-	//自機と当たっているかのフラグ
-	bool light_colliFlag = false;
-	bool heavy_colliFlag = false;
-	//走っているフラグ
-	bool runFlag = false;
-	//スペースを押したかどうか
-	bool attackFlag = false;
-	bool heavy_attackFlag = false;
+	////自機と当たっているかのフラグ
+	//bool light_colliFlag = false;
+	//bool heavy_colliFlag = false;
+	////走っているフラグ
+	//bool runFlag = false;
+	////スペースを押したかどうか
+	//bool attackFlag = false;
+	//bool heavy_attackFlag = false;
 
-	//各生存フラグ
-	bool isPAlive = true;
-	bool aliveFlag = true;
-	bool heavy_aliveFlag = true;
+	////各生存フラグ
+	//bool aliveFlag = true;
+	//bool heavy_aliveFlag = true;
 
-	//再出現させるタイマー
-	int respwanTimer = 0;
-	int heavy_respwanTimer = 0;
+	////再出現させるタイマー
+	//int respwanTimer = 0;
+	//int heavy_respwanTimer = 0;
 
 	/*敵*/
 	//振り向くまでの時間
@@ -100,7 +99,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE:
 
-			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
+			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
 				scene = TUTORIAL;
 				isPAlive = true;
@@ -110,6 +109,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 
 		case TUTORIAL:
+
+			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
+			{
+				scene = GAMEPLAY;
+			}
+
 			break;
 
 		case GAMEPLAY:
