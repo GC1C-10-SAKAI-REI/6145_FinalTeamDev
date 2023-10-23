@@ -61,10 +61,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int heavy_respwanTimer = 0;
 
 	enum Scene {
-		TITLE,     //0(各数値の初期化はタイトルで行う予定)
-		TUTORIAL,  //1
-		GAMEPLAY,  //2
-		GAMEOVER,  //3
+		TITLE,
+		TUTORIAL,
+		GAMEPLAY,
+		GAMEOVER,
 	};
 	int game = TITLE;
 
@@ -101,6 +101,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				if (keys[DIK_A])
 				{
 					player.Center.X -= player.Spd * player.Velocity.X;
+					//ダッシュ中の処理
 					if (keys[DIK_RETURN])
 					{
 						runFlag = true;
