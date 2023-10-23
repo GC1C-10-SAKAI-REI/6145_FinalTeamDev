@@ -121,7 +121,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			/*自機の移動処理*/
 			player.Velocity.X = 0;
-
+			//左方向
 			if (keys[DIK_A])
 			{
 				player.Velocity.X = -1;
@@ -137,6 +137,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					player.Velocity.X = -1;
 				}
 			}
+			//右方向
 			if (keys[DIK_D])
 			{
 				player.Velocity.X = 1;
