@@ -34,11 +34,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//オブジェクトのライフ
 	int objLife = 3;
 
+	//走っているフラグ
+	bool runFlag = false;
 	////自機と当たっているかのフラグ
 	//bool light_colliFlag = false;
 	//bool heavy_colliFlag = false;
-	////走っているフラグ
-	//bool runFlag = false;
 	////スペースを押したかどうか
 	//bool attackFlag = false;
 	//bool heavy_attackFlag = false;
@@ -125,10 +125,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			if (keys[DIK_A])
 			{
 				player.Velocity.X = -1;
+				//ダッシュ中の処理
+				if (keys[DIK_RETURN])
+				{
+					runFlag = true;
+					player.Velocity.X = -2;
+				}
+				else
+				{
+					runFlag = false;
+					player.Velocity.X = -1;
+				}
 			}
 			if (keys[DIK_D])
 			{
 				player.Velocity.X = 1;
+				//ダッシュ中の処理
+				if (keys[DIK_RETURN])
+				{
+					runFlag = true;
+					player.Velocity.X = 2;
+				}
+				else
+				{
+					runFlag = false;
+					player.Velocity.X = 1;
+				}
 			}
 
 			player.Center.X += player.Velocity.X * player.Spd;
