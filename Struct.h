@@ -19,7 +19,7 @@ typedef struct FallenObj
 {
 	Object Info;
 	bool ColFlag;
-	bool AtackFlag;
+	bool AtkFlag;
 	bool IsAlive;
 	int ResTimer;
 }fallenObj;

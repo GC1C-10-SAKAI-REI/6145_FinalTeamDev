@@ -170,9 +170,108 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			player.Center.X += player.Velocity.X * player.Spd;
+			
+			if (lightObj.IsAlive == true)
+			{
+				
+				//オブジェクトとプレイヤーの当たり判定
+				if (lightObj.Info.Center.X - lightObj.Info.Rad < player.Center.X + 16 && player.Center.X < lightObj.Info.Center.X + lightObj.Info.Rad)
+				{
+					
+					lightObj.ColFlag = true;
+					if (runFlag == true)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
+					{
+						lightObj.AtkFlag = true;
+						lightObj.IsAlive = false;
+					}
+				}
+				else//そうでなければ落ちない
+				{
+					lightObj.ColFlag = false;
+				}
+				//接触中にスペースキーを押すとオブジェクトを落とす
+				if (lightObj.ColFlag == true)
+				{
+					if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
+					{
+						lightObj.AtkFlag = true;
+						lightObj.IsAlive = false;
+					}
+				}
+			}
+
+			//if (heavy_aliveFlag == true)
+			//{
+			//	//ヘビーオブジェクトとプレイヤーの当たり判定
+			//	if (object_heavy.Center.X - 16 < player.Center.X + 16 && player.Center.X < object_heavy.Center.X + 32)
+			//	{
+			//		heavy_colliFlag = true;
+			//		if (runFlag == true && breakFlag == false)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
+			//		{
+			//			heavy_attackFlag = true;
+			//			object_life -= 1;
+			//		}
+			//		breakFlag = true;
+			//	}
+			//	else//そうでなければ落ちない
+			//	{
+			//		heavy_colliFlag = false;
+			//		breakFlag = false;
+			//	}
+
+			//	//ヘビーオブジェクトのライフが０になったら消える
+			//	if (object_life <= 0)
+			//	{
+			//		heavy_aliveFlag = false;
+			//	}
+			//	//接触中にスペースキーを押すとヘビーオブジェクトを落とす
+			//	if (heavy_colliFlag == true)
+			//	{
+			//		if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
+			//		{
+			//			heavy_attackFlag = true;
+			//			object_life -= 1;
+			//		}
+			//	}
+			//}
+
+			//オブジェクトが落ちた
+			if (lightObj.AtkFlag == true)
+			{
+				lightObj.ColFlag = false;
+				lightObj.ResTimer++;
+			}
+
+			//ヘビーオブジェクトが落ちた
+			/*if (heavy_attackFlag == true && object_life <= 0)
+			{
+				heavy_colliFlag = false;
+				heavy_respwanTimer++;
+			}*/
+
+			//オブジェクト復活
+			if (lightObj.ResTimer > 100)
+			{
+				if (lightObj.IsAlive == false)
+				{
+					lightObj.IsAlive = true;
+					lightObj.ResTimer = 0;
+					lightObj.AtkFlag = false;
+				}
+			}
+			/*if (heavy_respwanTimer > 100)
+			{
+				if (heavy_aliveFlag == false)
+				{
+					heavy_aliveFlag = true;
+					heavy_attackFlag = false;
+					heavy_respwanTimer = 0;
+					object_life = 10;
+				}
+			}*/
 
 			//※テストプレイ用に死亡フラグリセット
-			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+			if (keys[DIK_R] && !preKeys[DIK_R])
 			{
 				isPAlive = true;
 			}
