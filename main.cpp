@@ -60,6 +60,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int respwanTimer = 0;
 	int heavy_respwanTimer = 0;
 
+	bool breakFlag = false;
+
 	enum Scene {
 		TITLE,
 		TUTORIAL,
@@ -159,15 +161,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					if (object_heavy.Center.X - 16 < player.Center.X + 16 && player.Center.X < object_heavy.Center.X + 32)
 					{
 						heavy_colliFlag = true;
-						if (runFlag == true)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
+						if (runFlag == true && breakFlag == false)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 						{
 							heavy_attackFlag = true;
 							object_life -= 1;
 						}
+						breakFlag = true;
 					}
 					else//そうでなければ落ちない
 					{
 						heavy_colliFlag = false;
+						breakFlag = false;
 					}
 
 					//ヘビーオブジェクトのライフが０になったら消える
