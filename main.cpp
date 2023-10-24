@@ -35,6 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	/*プレイヤーが落とすオブジェクト*/
 	//軽い物
+	const int lObjNum = 2;
 	FallenObj lightObj =
 	{
 		{
