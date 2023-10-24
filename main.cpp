@@ -36,20 +36,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	/*プレイヤーが落とすオブジェクト*/
 	//軽い物
 	const int lObjNum = 2;
-	FallenObj lightObj =
+	FallenObj lightObj[lObjNum];
+	for (int i = 0; i < lObjNum; i++)
 	{
+		lightObj[i] = 
 		{
-			{640,360},
-			{0,0},
-			32,
-			0,
-			GREEN
-		},
-		false,
-		false,
-		true,
-		0
-	};
+			{
+				{640,360},
+				{0,0},
+				32,
+				0,
+				GREEN
+			},
+			false,
+			false,
+			true,
+			0
+		};
+	}
+	
 	//重い物
 	FallenObj heavyObj =
 	{
