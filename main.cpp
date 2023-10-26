@@ -54,6 +54,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			0
 		};
 	}
+	lightObj[1].Info.Center.X = 1000;
 	
 	//重い物
 	FallenObj heavyObj =
@@ -73,7 +74,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//重いオブジェクトのライフ
 	int hObjLife = 3;
 	//連続で当たり判定を発生させないようにするフラグ
-	bool breakFlag = false;
+	//bool breakFlag = false;
 
 	/*敵*/
 	//振り向くまでの時間
@@ -181,100 +182,107 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			player.Center.X += player.Velocity.X * player.Spd;
 		
 			/*軽い物の処理(担当：ゾ)*/
-			if (lightObj.IsAlive)
-			{			
-				//オブジェクトとプレイヤーの当たり判定
-				if (lightObj.Info.Center.X - lightObj.Info.Rad < player.Center.X + player.Rad && player.Center.X - player.Rad < lightObj.Info.Center.X + lightObj.Info.Rad)
-				{					
-					lightObj.ColFlag = true;
-					//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
-					if (runFlag)
+			for (int i = 0; i < lObjNum; i++)
+			{
+				if (lightObj[i].IsAlive)
+				{
+					//オブジェクトとプレイヤーの当たり判定
+					//lightObj[i].ColFlag = fLib->PtoOCollision(player, lightObj[i].Info, i);
+					
+					//オブジェクトとプレイヤーが触れている時
+					if (player.Center.X + player.Rad >= lightObj[i].Info.Center.X - lightObj[i].Info.Rad && player.Center.X - player.Rad <= lightObj[i].Info.Center.X - lightObj[i].Info.Rad)
 					{
-						lightObj.IsAlive = false;
+						lightObj[i].ColFlag = true;
+						if (lightObj[i].ColFlag)
+						{
+							//接触中にスペースキーを押すとオブジェクトを落とす
+							if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+							{
+								lightObj[i].IsAlive = false;
+							}
+							//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
+							if (runFlag)
+							{
+								lightObj[i].IsAlive = false;
+							}
+						}
+						
+					}
+					else//そうでなければ落ちない
+					{
+						lightObj[i].ColFlag = false;
 					}
 				}
-				else//そうでなければ落ちない
+				//オブジェクトが落ちた
+				if (!lightObj[i].IsAlive)
 				{
-					lightObj.ColFlag = false;
+					lightObj[i].ColFlag = false;
+					lightObj[i].ResTimer++;
 				}
-				//接触中にスペースキーを押すとオブジェクトを落とす
-				if (lightObj.ColFlag)
+				//オブジェクト復活
+				if (lightObj[i].ResTimer > 100)
 				{
-					if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+					if (!lightObj[i].IsAlive)
 					{
-						lightObj.IsAlive = false;
+						lightObj[i].IsAlive = true;
+						lightObj[i].ResTimer = 0;
 					}
 				}
-			}
-			//オブジェクトが落ちた
-			if (!lightObj.IsAlive)
-			{
-				lightObj.ColFlag = false;
-				lightObj.ResTimer++;
-			}
-			//オブジェクト復活
-			if (lightObj.ResTimer > 100)
-			{
-				if (!lightObj.IsAlive)
-				{
-					lightObj.IsAlive = true;
-					lightObj.ResTimer = 0;
-				}
-			}
+			}			
 
 			/*重い物の処理(担当：ゾ)*/
-			if (heavyObj.IsAlive)
-			{
-				//ヘビーオブジェクトとプレイヤーの当たり判定
-				if (heavyObj.Info.Center.X - heavyObj.Info.Rad < player.Center.X + player.Rad && player.Center.X - player.Rad < heavyObj.Info.Center.X + heavyObj.Info.Rad)
-				{
-					heavyObj.ColFlag = true;
-					if (runFlag && !breakFlag)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
-					{
-						heavyObj.AtkFlag = true;
-						hObjLife -= 1;
-					}
-					breakFlag = true;
-				}
-				else//そうでなければ落ちない
-				{
-					heavyObj.ColFlag = false;
-					breakFlag = false;
-				}
+			//if (heavyObj.IsAlive)
+			//{
+			//	//ヘビーオブジェクトとプレイヤーの当たり判定
+			//	if (heavyObj.Info.Center.X - heavyObj.Info.Rad < player.Center.X + player.Rad && player.Center.X - player.Rad < heavyObj.Info.Center.X + heavyObj.Info.Rad)
+			//	{
+			//		heavyObj.ColFlag = true;
+			//		if (runFlag && !breakFlag)//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
+			//		{
+			//			heavyObj.AtkFlag = true;
+			//			hObjLife -= 1;
+			//		}
+			//		breakFlag = true;
+			//	}
+			//	else//そうでなければ落ちない
+			//	{
+			//		heavyObj.ColFlag = false;
+			//		breakFlag = false;
+			//	}
 
-				//ヘビーオブジェクトのライフが０になったら消える
-				if (hObjLife <= 0)
-				{
-					heavyObj.IsAlive = false;
-				}
-				//接触中にスペースキーを押すとヘビーオブジェクトを落とす
-				if (heavyObj.ColFlag)
-				{
-					if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
-					{
-						heavyObj.AtkFlag = true;
-						hObjLife -= 1;
-					}
-				}
-			}	
+			//	//ヘビーオブジェクトのライフが０になったら消える
+			//	if (hObjLife <= 0)
+			//	{
+			//		heavyObj.IsAlive = false;
+			//	}
+			//	//接触中にスペースキーを押すとヘビーオブジェクトを落とす
+			//	if (heavyObj.ColFlag)
+			//	{
+			//		if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
+			//		{
+			//			heavyObj.AtkFlag = true;
+			//			hObjLife -= 1;
+			//		}
+			//	}
+			//}	
 
-			//ヘビーオブジェクトが落ちた
-			if (heavyObj.AtkFlag && hObjLife <= 0)
-			{
-				heavyObj.ColFlag = false;
-				heavyObj.ResTimer++;
-			}
-			
-			if (heavyObj.ResTimer > 100)
-			{
-				if (!heavyObj.IsAlive)
-				{
-					heavyObj.IsAlive = true;
-					heavyObj.AtkFlag = false;
-					heavyObj.ResTimer = 0;
-					hObjLife = 3;
-				}
-			}
+			////ヘビーオブジェクトが落ちた
+			//if (heavyObj.AtkFlag && hObjLife <= 0)
+			//{
+			//	heavyObj.ColFlag = false;
+			//	heavyObj.ResTimer++;
+			//}
+			//
+			//if (heavyObj.ResTimer > 100)
+			//{
+			//	if (!heavyObj.IsAlive)
+			//	{
+			//		heavyObj.IsAlive = true;
+			//		heavyObj.AtkFlag = false;
+			//		heavyObj.ResTimer = 0;
+			//		hObjLife = 3;
+			//	}
+			//}
 
 			//※テストプレイ用に死亡フラグリセット
 			if (keys[DIK_R] && !preKeys[DIK_R])
@@ -368,15 +376,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				fLib->DrawSquare(player.Center, player.Rad, player.Color);
 			}
 			//軽いオブジェクト
-			if (lightObj.IsAlive)
+			for (int i = 0; i < lObjNum; i++)
 			{
-				fLib->DrawSquare(lightObj.Info.Center, lightObj.Info.Rad, lightObj.Info.Color);
-			}
+				if (lightObj[i].IsAlive)
+				{
+					Novice::DrawBox(int(lightObj[i].Info.Center.X - lightObj[i].Info.Rad), int(lightObj[i].Info.Center.Y - lightObj[i].Info.Rad), int(lightObj[i].Info.Rad * 2), int(lightObj[i].Info.Rad * 2), 0, lightObj[i].Info.Color, kFillModeSolid);
+				}
+			}			
 			//重いオブジェクト
-			if (heavyObj.IsAlive)
+			/*if (heavyObj.IsAlive)
 			{
 				fLib->DrawSquare(heavyObj.Info.Center, heavyObj.Info.Rad, heavyObj.Info.Color);
-			}
+			}*/
 
 			//デバッグ用
 			Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 165);
