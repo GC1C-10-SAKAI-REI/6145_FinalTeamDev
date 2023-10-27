@@ -309,7 +309,72 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						hObjLife[i] = 3;
 					}
 				}
-			}		
+			}
+
+			/*オブジェクトのランダム生成(担当：リュウ)*/
+			//for (int i = 0; i < 5; i++)
+			//{
+			//	//life分け
+			//	if (positionFlag[i] == 1 && objectHp[i] <= 0)
+			//	{
+			//		number[i] = rand();
+			//		if (number[i] % 2 == 0)
+			//		{
+			//			objectHp[i] = hpA;
+			//		}
+			//		if (number[i] % 2 == 1)
+			//		{
+			//			objectHp[i] = hpB;
+			//		}
+			//	}
+
+			//	//軽いものと重いもの分け
+			//	if ((positionFlag[i] == 1) && (objectHp[i] == hpA))
+			//	{
+			//		objectFlag[i] = 0; //軽いもの
+			//	}
+			//	if ((positionFlag[i] == 1) && (objectHp[i] == hpB))
+			//	{
+			//		objectFlag[i] = 1; //重いもの
+			//	}
+
+			//	//テスト用
+			//	if (Novice::CheckHitKey(DIK_0))
+			//	{
+			//		objectHp[0] -= 3;
+			//	}
+
+			//	if (Novice::CheckHitKey(DIK_1))
+			//	{
+			//		objectHp[1] -= 3;
+			//	}
+
+			//	if (Novice::CheckHitKey(DIK_2))
+			//	{
+			//		objectHp[2] -= 3;
+			//	}
+
+			//	if (Novice::CheckHitKey(DIK_3))
+			//	{
+			//		objectHp[3] -= 3;
+			//	}
+			//	if (Novice::CheckHitKey(DIK_4))
+			//	{
+			//		objectHp[4] -= 3;
+			//	}
+
+			//	//Objcet再生成
+			//	if (objectHp[i] <= 0)
+			//	{
+			//		positionFlag[i] = 0;
+			//		responcount[i]++;
+			//	}
+			//	if (responcount[i] >= 100)
+			//	{
+			//		positionFlag[i] = 1;
+			//		responcount[i] = 0;
+			//	}
+			//}
 
 			//※テストプレイ用に死亡フラグリセット
 			if (keys[DIK_R] && !preKeys[DIK_R])
