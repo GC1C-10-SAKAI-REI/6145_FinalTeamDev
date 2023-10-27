@@ -9,7 +9,6 @@
 
 const char kWindowTitle[] = "6145_刹ニャのイタズラ";
 
-
 void DrawSquare(Vec2& center, float rad, unsigned int color);
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -22,12 +21,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
 
+	//ランダムシード生成
 	unsigned int currentTime = (unsigned int)time(nullptr);
 	srand(currentTime);
 
 	int number[5] = { 0 };
 #pragma region //Objecet
-
 
 	Object object[5] =
 	{
@@ -37,14 +36,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{{800.0f,320.0f},{0.0f,0.0f},16.0f,0.0f,RED},
 		{{960.0f,320.0f},{0.0f,0.0f},16.0f,0.0f,RED}
 	};
-
-
+	//生存フラグ
 	int positionFlag[5] = { 1,1,1,1,1 };
-
-
-
+	//オブジェクトのHP
 	int objectHp[5] = { 0 };
+	//false：軽い物 true：重い物
 	int objectFlag[5] = { 0 };
+	//リスポーンするまでの時間
 	int responcount[5] = { 0 };
 #pragma endregion
 
@@ -52,7 +50,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int hpA = 1;
 	int hpB = 3;
 #pragma endregion
-
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -65,18 +62,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		memcpy(preKeys, keys, 256);
 		Novice::GetHitKeyStateAll(keys);
 
-
-
-
 		/// ↓更新処理ここから
-
-
-
-
 
 		for (int i = 0; i < 5; i++)
 		{
-
 			//life分け
 			if (positionFlag[i] == 1 && objectHp[i] <= 0)
 			{
@@ -102,7 +91,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				objectFlag[i] = 1; //重いもの
 
 			}
-
 
 			//テスト用
 			if (Novice::CheckHitKey(DIK_0))
@@ -135,18 +123,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				positionFlag[i] = 0;
 				responcount[i]++;
 			}
-
 			if (responcount[i] >= 100)
 			{
 				positionFlag[i] = 1;
 				responcount[i] = 0;
 			}
-
-
-
 		}
-
-
 
 		/// ↑更新処理ここまで
 
@@ -154,15 +136,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		/// ↓描画処理ここから
 
-
 #pragma region  //テストテキスト
 		Novice::ScreenPrintf(20, 50, "hpB %d\n", objectHp[1]);
 		Novice::ScreenPrintf(20, 70, "responcount %d\n", responcount[1]);
 		Novice::ScreenPrintf(20, 90, "positionFlag %d\n", positionFlag[1]);
 
 #pragma endregion
-
-
 
 		for (int i = 0; i < 5; i++)
 		{
@@ -179,8 +158,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			}
 		}
-
-
 
 		/// ↑描画処理ここまで
 
