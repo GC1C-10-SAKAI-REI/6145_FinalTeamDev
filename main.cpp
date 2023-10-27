@@ -66,7 +66,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		for (int i = 0; i < 5; i++)
 		{
 			//life分け
-			if (positionFlag[i] == 1 && objectHp[i] <= 0)
+			if (isObjAlive[i] == 1 && objectHp[i] <= 0)
 			{
 				number[i] = rand();
 				if (number[i] % 2 == 0)
@@ -80,13 +80,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//軽いものと重いもの分け
-			if ((positionFlag[i] == 1) && (objectHp[i] == hpA))
+			if ((isObjAlive[i] == 1) && (objectHp[i] == hpA))
 			{
-				objectFlag[i] = 0; //軽いもの
+				weightFlag[i] = 0; //軽いもの
 			}
-			if ((positionFlag[i] == 1) && (objectHp[i] == hpB))
+			if ((isObjAlive[i] == 1) && (objectHp[i] == hpB))
 			{
-				objectFlag[i] = 1; //重いもの
+				weightFlag[i] = 1; //重いもの
 			}
 
 			//テスト用
@@ -117,12 +117,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//Objcet再生成
 			if (objectHp[i] <= 0)
 			{
-				positionFlag[i] = 0;
+				isObjAlive[i] = 0;
 				responcount[i]++;
 			}
 			if (responcount[i] >= 100)
 			{
-				positionFlag[i] = 1;
+				isObjAlive[i] = 1;
 				responcount[i] = 0;
 			}
 		}
@@ -136,18 +136,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #pragma region  //テストテキスト
 		Novice::ScreenPrintf(20, 50, "hpB %d\n", objectHp[1]);
 		Novice::ScreenPrintf(20, 70, "responcount %d\n", responcount[1]);
-		Novice::ScreenPrintf(20, 90, "positionFlag %d\n", positionFlag[1]);
+		Novice::ScreenPrintf(20, 90, "positionFlag %d\n", isObjAlive[1]);
 
 #pragma endregion
 
 		for (int i = 0; i < 5; i++)
 		{
-			if (objectFlag[i] == 0 && positionFlag[i] == 1)
+			if (weightFlag[i] == 0 && isObjAlive[i] == 1)
 			{
 				object[i].Color = RED;
 				DrawSquare(object[i].Center, object[i].Rad, object[i].Color);
 			}
-			if (objectFlag[i] == 1 && positionFlag[i] == 1)
+			if (weightFlag[i] == 1 && isObjAlive[i] == 1)
 			{
 				object[i].Color = GREEN;
 				DrawSquare(object[i].Center, object[i].Rad, object[i].Color);
