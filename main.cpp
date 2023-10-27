@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//ランダムシード生成
 	unsigned int currentTime = (unsigned int)time(nullptr);
 	srand(currentTime);
-
+	//抽選の為の変数
 	int number[5] = { 0 };
 #pragma region //Objecet
 
