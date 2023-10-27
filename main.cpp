@@ -18,6 +18,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//自作関数クラス
 	FuncLib* fLib = new FuncLib();
+	//ランダムシード生成
+	unsigned int currentTime = (unsigned int)time(nullptr);
+	srand(currentTime);
+	//抽選の為の変数
+	int number[5] = { 0 };
 	
 	//自機
 	Object player =
