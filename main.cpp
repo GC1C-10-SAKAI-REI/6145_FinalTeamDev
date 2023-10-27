@@ -68,7 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//life分け
 			if (isObjAlive[i] == 1 && objectHp[i] <= 0)
 			{
-				number[i] = rand();
+				number[i] = rand() % 6;
 				if (number[i] % 2 == 0)
 				{
 					objectHp[i] = hpA;
