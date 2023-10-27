@@ -3,6 +3,8 @@
 #define WORLD_WIDTH 3840
 
 #include <Novice.h>
+#include <stdlib.h>
+#include <time.h>
 #include "FuncLib.h"
 
 const char kWindowTitle[] = "6145_刹ニャのイタズラ";
