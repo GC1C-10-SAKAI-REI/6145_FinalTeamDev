@@ -37,11 +37,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{{960.0f,320.0f},{0.0f,0.0f},16.0f,0.0f,RED}
 	};
 	//生存フラグ
-	int positionFlag[5] = { 1,1,1,1,1 };
+	int isObjAlive[5] = { 1,1,1,1,1 };
 	//オブジェクトのHP
 	int objectHp[5] = { 0 };
 	//false：軽い物 true：重い物
-	int objectFlag[5] = { 0 };
+	int weightFlag[5] = { 0 };
 	//リスポーンするまでの時間
 	int responcount[5] = { 0 };
 #pragma endregion
