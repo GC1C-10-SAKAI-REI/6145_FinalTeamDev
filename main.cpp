@@ -146,13 +146,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				object[i].Color = RED;
 				DrawSquare(object[i].Center, object[i].Rad, object[i].Color);
-
 			}
 			if (objectFlag[i] == 1 && positionFlag[i] == 1)
 			{
 				object[i].Color = GREEN;
 				DrawSquare(object[i].Center, object[i].Rad, object[i].Color);
-
 			}
 		}
 
