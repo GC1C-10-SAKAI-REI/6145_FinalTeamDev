@@ -54,7 +54,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
 	{
-
 		// フレームの開始
 		Novice::BeginFrame();
 
@@ -85,11 +84,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				objectFlag[i] = 0; //軽いもの
 			}
-
 			if ((positionFlag[i] == 1) && (objectHp[i] == hpB))
 			{
 				objectFlag[i] = 1; //重いもの
-
 			}
 
 			//テスト用
