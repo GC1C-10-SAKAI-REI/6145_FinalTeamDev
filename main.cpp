@@ -88,6 +88,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int hObjLife[hObjNum] = { 3 };
 	//連続で当たり判定を発生させないようにするフラグ
 	bool breakFlag[hObjNum] = { false };
+	//false：軽い物 true：重い物
+	int weightFlag[5] = { 0 };
+	//リスポーンするまでの時間
+	int responcount[5] = { 0 };
 
 	/*敵*/
 	//振り向くまでの時間
