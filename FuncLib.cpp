@@ -24,7 +24,7 @@ bool FuncLib::PtoBCollision(Object obj1, Object* obj2, int& i)
 	return false;
 }
 
-bool FuncLib::PtoOCollision(Object &obj1, Object &obj2)
+bool FuncLib::PtoOCollision(Object& obj1, Object& obj2)
 {
 	if (obj1.Center.X + obj1.Rad > obj2.Center.X - obj2.Rad && obj1.Center.X - obj1.Rad < obj2.Center.X + obj2.Rad)
 	{

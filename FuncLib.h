@@ -19,5 +19,5 @@ public:
 
 	//自機とブロックの判定
 	//obj1 : 自機、obj2 : 落とすオブジェクト,i : for文のi
-	bool PtoOCollision(Object &obj1, Object &obj2);
+	bool PtoOCollision(Object& obj1, Object& obj2);
 };
