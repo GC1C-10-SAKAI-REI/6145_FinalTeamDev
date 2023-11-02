@@ -146,7 +146,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			/*自機の移動処理(担当：ゾ)*/
 			player.Velocity.X = 0;
 			//左方向
-			if (keys[DIK_A])
+			if (keys[DIK_A] || keys[DIK_LEFT])
 			{
 				player.Velocity.X = -1;
 				//ダッシュ中の処理
@@ -162,7 +162,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 			//右方向
-			if (keys[DIK_D])
+			if (keys[DIK_D] || keys[DIK_RIGHT])
 			{
 				player.Velocity.X = 1;
 				//ダッシュ中の処理
@@ -323,10 +323,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
-
+			//objcet再生成
 			for (int i = 0; i < remainObj; i++)
 			{
-				//Objcet再生成
 				if (obj[i].Hp <= 0)
 				{
 					obj[i].IsAlive = false;
