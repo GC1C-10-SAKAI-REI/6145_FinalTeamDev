@@ -382,18 +382,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				else if (!safeFlag && ownerTimer == 495)
 				{
 					//プレイヤーの死亡処理
-					//isPAlive = false;
+					isPAlive = false;
 				}
-
+				//ownerTimerが495となっているがサカイのPCが165fpsであるため
+				//165*3(つまりサカイのPC上で3秒)で495となっている。
+				//皆のPCが60fpsなら180に値を修正しといてくれ
 				if (ownerTimer > 495)
 				{
 					ownerTimer = 0;
 				}
 			}
+			//ゲームオーバーへの遷移
+			if (!isPAlive)
+			{
+				scene = GAMEOVER;
+			}
 
 			break;
 
 		case GAMEOVER:
+
+			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
+			{
+				scene = TITLE;
+			}
+
 			break;
 		}		
 		
@@ -407,13 +420,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE:
 
-
+			Novice::ScreenPrintf(0,0,"scene = TITLE");
 
 			break;
 
 		case TUTORIAL:
 
-
+			Novice::ScreenPrintf(0, 0, "scene = TUTORIAL");
 
 			break;
 
@@ -451,15 +464,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}			
 
 			//デバッグ用
-			Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 165);
-			for (int i = 0; i < remainObj; i++)
-			{
-				Novice::ScreenPrintf(0, 20 + 20 * i, "timer = %d", obj[i].WeightFlag);
-			}
+			Novice::ScreenPrintf(0, 0, "scene = GAMEPLAY");
+			Novice::ScreenPrintf(0, 20, "timer = %d", ownerTimer / 165);
 
 			break;
 
 		case GAMEOVER:
+
+			Novice::ScreenPrintf(0, 0, "scene = GAMEOVER");
+
 			break;
 		}
 
