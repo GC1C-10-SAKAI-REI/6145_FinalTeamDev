@@ -22,5 +22,6 @@ typedef struct FallenObj
 	bool AtkFlag;
 	bool IsAlive;
 	int ResTimer;
-	bool weightFlag;//falseFŒy‚¢•¨ trueFd‚¢•¨
+	bool WeightFlag;//falseï¼šè»½ã„ç‰© trueï¼šé‡ã„ç‰©
+	int Hp;
 }FallenObj;

@@ -41,14 +41,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	bool runFlag = false;
 
 	/*プレイヤーが落とすオブジェクト*/
-	const int remainObj = 2;
+	const int remainObj = 5;
 	FallenObj obj[remainObj];
 	for (int i = 0; i < remainObj; i++)
 	{
 		obj[i] = 
 		{
 			{
-				{640,360},
+				{float(120 + (120 * i)),360},
 				{0,0},
 				32,
 				0,
@@ -57,19 +57,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			false,
 			false,
 			true,
-			0
+			0,
+			false,
+			1
 		};
 	}
-	obj[1].Info.Center.X = 710;
 	
 	//重い物
 	
 	//重いオブジェクトのライフ
-	int hObjLife[remainObj] = { 3 };
+	//int hObjLife[remainObj] = { 3 };
 	//連続で当たり判定を発生させないようにするフラグ
 	bool breakFlag[remainObj] = { false };
 	//リスポーンするまでの時間
 	int responcount[remainObj] = { 0 };
+	const int lightObjHp = 1;
+	const int heavyObjHp = 3;
 
 	/*敵*/
 	//振り向くまでの時間
@@ -128,7 +131,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				isPAlive = true;
 				for (int i = 0; i < remainObj; i++)
 				{
-					hObjLife[i] = 3;
+					obj[i].Hp = 1;
 				}
 			}
 
@@ -181,11 +184,78 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			player.Center.X += player.Velocity.X * player.Spd;
+
+			/*オブジェクトのランダム生成(担当：リュウ)*/
+			for (int i = 0; i < 5; i++)
+			{
+				//life分け
+				if (obj[i].IsAlive && obj[i].Hp <= 0)
+				{
+					number[i] = rand();
+					if (number[i] % 2 == 0)
+					{
+						obj[i].Hp = lightObjHp;
+					}
+					if (number[i] % 2 == 1)
+					{
+						obj[i].Hp = heavyObjHp;
+					}
+				}
+
+				//軽いものと重いもの分け
+				if (obj[i].IsAlive && obj[i].Hp == lightObjHp)
+				{
+					obj[i].WeightFlag = false; //軽いもの
+					obj[i].Info.Color = GREEN;
+				}
+				if (obj[i].IsAlive && obj[i].Hp == heavyObjHp)
+				{
+					obj[i].WeightFlag = true; //重いもの
+					obj[i].Info.Color = BLUE;
+				}
+
+				//テスト用
+				if (Novice::CheckHitKey(DIK_0))
+				{
+					obj[0].Hp -= 3;
+				}
+
+				if (Novice::CheckHitKey(DIK_1))
+				{
+					obj[1].Hp -= 3;
+				}
+
+				if (Novice::CheckHitKey(DIK_2))
+				{
+					obj[2].Hp -= 3;
+				}
+
+				if (Novice::CheckHitKey(DIK_3))
+				{
+					obj[3].Hp -= 3;
+				}
+				if (Novice::CheckHitKey(DIK_4))
+				{
+					obj[4].Hp -= 3;
+				}
+
+				//Objcet再生成
+				if (obj[i].Hp <= 0)
+				{
+					obj[i].IsAlive = false;
+					responcount[i]++;
+				}
+				if (responcount[i] >= 100)
+				{
+					obj[i].IsAlive = true;
+					responcount[i] = 0;
+				}
+			}
 			
 			/*軽い物の処理(担当：ゾ)*/
 			for (int i = 0; i < remainObj; i++)
 			{
-				if (!obj[i].weightFlag)
+				if (!obj[i].WeightFlag)
 				{
 					if (obj[i].IsAlive)
 					{
@@ -216,7 +286,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//当たり判定後の処理
 			for (int i = 0; i < remainObj; i++)
 			{
-				if (!obj[i].weightFlag)
+				if (!obj[i].WeightFlag)
 				{
 					//オブジェクトが落ちた
 					if (!obj[i].IsAlive)
@@ -239,7 +309,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			/*重い物の処理(担当：ゾ)*/
 			for (int i = 0; i < remainObj; i++)
 			{
-				if (obj[i].weightFlag)
+				if (obj[i].WeightFlag)
 				{
 					if (obj[i].IsAlive)
 					{
@@ -252,13 +322,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
 							{
 								obj[i].AtkFlag = true;
-								hObjLife[i] -= 1;
+								obj[i].Hp -= 1;
 							}
 							//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 							if (runFlag && !breakFlag[i])
 							{
 								obj[i].AtkFlag = true;
-								hObjLife[i] -= 1;
+								obj[i].Hp -= 1;
 								//break;
 							}
 							breakFlag[i] = true;
@@ -270,7 +340,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						}
 
 						//ヘビーオブジェクトのライフが０になったら消える
-						if (hObjLife[i] <= 0)
+						if (obj[i].Hp <= 0)
 						{
 							obj[i].IsAlive = false;
 						}
@@ -279,10 +349,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 			for (int i = 0; i < remainObj; i++)
 			{
-				if (obj[i].weightFlag)
+				if (obj[i].WeightFlag)
 				{
 					//ヘビーオブジェクトが落ちた
-					if (obj[i].AtkFlag && hObjLife[i] <= 0)
+					if (obj[i].AtkFlag && obj[i].Hp <= 0)
 					{
 						obj[i].ColFlag = false;
 						obj[i].ResTimer++;
@@ -295,76 +365,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							obj[i].IsAlive = true;
 							obj[i].AtkFlag = false;
 							obj[i].ResTimer = 0;
-							hObjLife[i] = 3;
 						}
 					}
 				}
 			}
-
-			/*オブジェクトのランダム生成(担当：リュウ)*/
-			//for (int i = 0; i < 5; i++)
-			//{
-			//	//life分け
-			//	if (positionFlag[i] == 1 && objectHp[i] <= 0)
-			//	{
-			//		number[i] = rand();
-			//		if (number[i] % 2 == 0)
-			//		{
-			//			objectHp[i] = hpA;
-			//		}
-			//		if (number[i] % 2 == 1)
-			//		{
-			//			objectHp[i] = hpB;
-			//		}
-			//	}
-
-			//	//軽いものと重いもの分け
-			//	if ((positionFlag[i] == 1) && (objectHp[i] == hpA))
-			//	{
-			//		objectFlag[i] = 0; //軽いもの
-			//	}
-			//	if ((positionFlag[i] == 1) && (objectHp[i] == hpB))
-			//	{
-			//		objectFlag[i] = 1; //重いもの
-			//	}
-
-			//	//テスト用
-			//	if (Novice::CheckHitKey(DIK_0))
-			//	{
-			//		objectHp[0] -= 3;
-			//	}
-
-			//	if (Novice::CheckHitKey(DIK_1))
-			//	{
-			//		objectHp[1] -= 3;
-			//	}
-
-			//	if (Novice::CheckHitKey(DIK_2))
-			//	{
-			//		objectHp[2] -= 3;
-			//	}
-
-			//	if (Novice::CheckHitKey(DIK_3))
-			//	{
-			//		objectHp[3] -= 3;
-			//	}
-			//	if (Novice::CheckHitKey(DIK_4))
-			//	{
-			//		objectHp[4] -= 3;
-			//	}
-
-			//	//Objcet再生成
-			//	if (objectHp[i] <= 0)
-			//	{
-			//		positionFlag[i] = 0;
-			//		responcount[i]++;
-			//	}
-			//	if (responcount[i] >= 100)
-			//	{
-			//		positionFlag[i] = 1;
-			//		responcount[i] = 0;
-			//	}
-			//}
 
 			//※テストプレイ用に死亡フラグリセット
 			if (keys[DIK_R] && !preKeys[DIK_R])
@@ -460,7 +464,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//軽いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
-				if (obj[i].IsAlive)
+				if (obj[i].IsAlive && !obj[i].WeightFlag)
 				{
 					fLib->DrawSquare(obj[i].Info.Center,obj[i].Info.Rad,obj[i].Info.Color);
 				}
@@ -468,7 +472,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//重いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
-				if (obj[i].IsAlive)
+				if (obj[i].IsAlive && obj[i].WeightFlag)
 				{
 					fLib->DrawSquare(obj[i].Info.Center, obj[i].Info.Rad, obj[i].Info.Color);
 				}
@@ -477,9 +481,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//デバッグ用
 			Novice::ScreenPrintf(0, 0, "timer = %d", ownerTimer / 165);
-			Novice::ScreenPrintf(0, 20, "isAlive = %d", isPAlive);
-			Novice::ScreenPrintf(0, 40, "colFlag0 = %d", hObjLife[0]);
-			Novice::ScreenPrintf(0, 60, "colFlag1 = %d", hObjLife[1]);
+			for (int i = 0; i < remainObj; i++)
+			{
+				Novice::ScreenPrintf(0, 20 + 20 * i, "timer = %d", obj[i].WeightFlag);
+			}
 
 			break;
 
