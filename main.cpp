@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	unsigned int currentTime = (unsigned int)time(nullptr);
 	srand(currentTime);
 	//抽選の為の変数
-	//int number[5] = { 0 };
+	int number[5] = { 0 };
 	
 	//自機
 	Object player =
@@ -64,8 +64,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	}
 	//連続で当たり判定を発生させないようにするフラグ
 	bool breakFlag[remainObj] = { false };
-	//リスポーンするまでの時間
-	//int responcount[remainObj] = { 0 };
 	//軽いオブジェクトのHP
 	const int lightObjHp = 1;
 	//重いオブジェクトのHP
