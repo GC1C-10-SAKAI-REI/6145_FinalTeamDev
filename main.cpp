@@ -77,12 +77,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		/// ↓描画処理ここから
 
 		Novice::ScreenPrintf(20, 20, "hp %d", hp);
-		Novice::ScreenPrintf(20, 40, "Score0 %d", score0);
+
+		Novice::ScreenPrintf(0, 0, "%d%d%d%d", score1000, score100, score10, score0);
+
+		/*Novice::ScreenPrintf(20, 40, "Score0 %d", score0);
 		Novice::ScreenPrintf(20, 60, "Score10 %d", score10);
 		Novice::ScreenPrintf(20, 80, "Score100 %d", score100);
-		Novice::ScreenPrintf(20, 100, "Score1000 %d", score1000);
-
-
+		Novice::ScreenPrintf(20, 100, "Score1000 %d", score1000);*/
 
 		/// ↑描画処理ここまで
 
