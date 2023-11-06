@@ -18,6 +18,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	unsigned int color = 0xFF000000;
 	int cFlag = 0;
+	int endFlag = 0;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -30,15 +31,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Novice::GetHitKeyStateAll(keys);
 
 		/// ↓更新処理ここから
-		
-		if (cFlag % 2 == 0)
+
+		if (endFlag <= 2)
 		{
-			color++;
-		}
-		if (color >= 0xFF0000FF)
-		{
-			cFlag++;
-		}
+			if (cFlag % 2 == 0)
+			{
+				color += 5;
+			}
+			else if (cFlag % 2 == 1)
+			{
+				color -= 5;
+			}
+
+			if (color >= 0xFF00008F)
+			{
+				cFlag++;
+			}
+			else if (color <= 0xFF000000)
+			{
+				cFlag--;
+				endFlag++;
+			}
+		}		
 		
 		/// ↑更新処理ここまで
 		
@@ -47,7 +61,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		/// ↓描画処理ここから
 		
 		Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, color, kFillModeSolid);
-		
+		Novice::ScreenPrintf(0, 0, "cFlag = %d", cFlag);
+
 		/// ↑描画処理ここまで
 
 		// フレームの終了
