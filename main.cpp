@@ -109,6 +109,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//switch用変数
 	Scene scene = TITLE;
 
+	//
+	int score[4] = { 0 };
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
 	{
@@ -220,7 +223,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//接触中にスペースキーを押すとオブジェクトを落とす
 							if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 							{
-								obj[i].Hp -= 1;								
+								obj[i].Hp -= 1;
 							}
 							//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 							if (runFlag)
@@ -233,9 +236,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							obj[i].ColFlag = false;
 						}
 
+						//攻撃されたら消える
 						if (obj[i].Hp < 1)
 						{
 							obj[i].IsAlive = false;
+							//10ポイント加算
+							score[2] += 1;
 						}
 						continue;
 					}
@@ -301,6 +307,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						if (obj[i].Hp <= 0)
 						{
 							obj[i].IsAlive = false;
+							//100点加算
+							score[1] += 1;
 						}
 					}
 				}
@@ -424,6 +432,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
+			/*スコア関係(担当：リュウ)*/
+			if (score[3] > 9)
+			{
+				score[2] += 1;
+				score[3] = 0;
+			}
+			if (score[2] > 9)
+			{
+				score[1] += 1;
+				score[2] = 0;
+			}
+			if (score[1] > 9)
+			{
+				score[0] += 1;
+				score[1] = 0;
+			}
+
 			//ゲームオーバーへの遷移
 			if (!isPAlive)
 			{
@@ -500,7 +525,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//デバッグ用
 			Novice::ScreenPrintf(0, 0, "scene = GAMEPLAY");
-			Novice::ScreenPrintf(0, 20, "timer = %d", ownerTimer / 165);
+			//Novice::ScreenPrintf(0, 20, "timer = %d", ownerTimer / 165);
+			Novice::ScreenPrintf(1100, 0, "score = %d%d%d%d", score[0], score[1], score[2], score[3]);
 
 			break;
 
