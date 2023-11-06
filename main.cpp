@@ -463,6 +463,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		case GAMEPLAY:
 
+			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
+			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, color, kFillModeSolid);
+
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
 			{
