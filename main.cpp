@@ -94,9 +94,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	bool safeFlag = false;
 
 	//演出の為の変数
-	unsigned int color = 0xFF000000;
-	int cFlag = 0;
-	int endFlag = 0;
+	unsigned int ownerEffect = 0xFF000000;
+	int changeFlag = 0;
+	int effectEnd = 0;
 
 	//シーン切り替え用列挙体
 	enum Scene
@@ -395,30 +395,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				if (ownerTimer > 660)
 				{
 					ownerTimer = 0;
+					effectEnd = 0;
 				}
 			}
 			//飼い主が振り向く演出の処理
 			if (ownerTimer >= 220)
 			{
-				if (endFlag <= 2)
+				if (effectEnd <= 2)
 				{
-					if (cFlag % 2 == 0)
+					if (changeFlag % 2 == 0)
 					{
-						color += 3;
+						ownerEffect += 3;
 					}
-					else if (cFlag % 2 == 1)
+					else if (changeFlag % 2 == 1)
 					{
-						color -= 3;
+						ownerEffect -= 3;
 					}
 
-					if (color >= 0xFF00006F)
+					if (ownerEffect >= 0xFF00006F)
 					{
-						cFlag++;
+						changeFlag++;
 					}
-					else if (color <= 0xFF000000)
+					else if (ownerEffect <= 0xFF000000)
 					{
-						cFlag--;
-						endFlag++;
+						changeFlag--;
+						effectEnd++;
 					}
 				}
 			}
@@ -464,7 +465,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		case GAMEPLAY:
 
 			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
-			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, color, kFillModeSolid);
+			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
 
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
