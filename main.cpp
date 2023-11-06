@@ -384,19 +384,45 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					player.Color = RED;
 				}
-				else if (!safeFlag && ownerTimer == 495)
+				else if (!safeFlag && ownerTimer == 660)
 				{
 					//プレイヤーの死亡処理
 					isPAlive = false;
 				}
-				//ownerTimerが495となっているがサカイのPCが165fpsであるため
-				//165*3(つまりサカイのPC上で3秒)で495となっている。
-				//皆のPCが60fpsなら180に値を修正しといてくれ
-				if (ownerTimer > 495)
+				//ownerTimerが660となっているがサカイのPCが165fpsであるため
+				//165*4(つまりサカイのPC上で3秒)で660となっている。
+				//皆のPCが60fpsなら240に値を修正しといてくれ
+				if (ownerTimer > 660)
 				{
 					ownerTimer = 0;
 				}
 			}
+			//飼い主が振り向く演出の処理
+			if (ownerTimer >= 220)
+			{
+				if (endFlag <= 2)
+				{
+					if (cFlag % 2 == 0)
+					{
+						color += 3;
+					}
+					else if (cFlag % 2 == 1)
+					{
+						color -= 3;
+					}
+
+					if (color >= 0xFF00006F)
+					{
+						cFlag++;
+					}
+					else if (color <= 0xFF000000)
+					{
+						cFlag--;
+						endFlag++;
+					}
+				}
+			}
+
 			//ゲームオーバーへの遷移
 			if (!isPAlive)
 			{
