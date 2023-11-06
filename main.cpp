@@ -93,6 +93,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// オブジェクトの一つどれかに隠れてたらtrue
 	bool safeFlag = false;
 
+	//演出の為の変数
+	unsigned int color = 0xFF000000;
+	int cFlag = 0;
+	int endFlag = 0;
+
 	//シーン切り替え用列挙体
 	enum Scene
 	{
