@@ -5,6 +5,7 @@
 #include <Novice.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include "FuncLib.h"
 
 const char kWindowTitle[] = "6145_刹ニャのイタズラ";
@@ -39,6 +40,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	bool isPAlive = true;
 	//走っているフラグ
 	bool runFlag = false;
+	//
+	float runPower = 0.0f;
 
 	/*プレイヤーが落とすオブジェクト*/
 	const int remainObj = 5;
@@ -153,40 +156,71 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			/*自機の移動処理(担当：ゾ)*/
 			player.Velocity.X = 0;
-			//左方向
+
+			//ベクトル決め
 			if (keys[DIK_A] || keys[DIK_LEFT])
 			{
-				player.Velocity.X = -1;
-				//ダッシュ中の処理
-				if (keys[DIK_RETURN])
-				{
-					runFlag = true;
-					player.Velocity.X = -2;
-				}
-				else
-				{
-					runFlag = false;
-					player.Velocity.X = -1;
-				}
+				player.Velocity.X = -1;				
 			}
-			//右方向
-			if (keys[DIK_D] || keys[DIK_RIGHT])
+			else if (keys[DIK_D] || keys[DIK_RIGHT])
 			{
 				player.Velocity.X = 1;
-				//ダッシュ中の処理
-				if (keys[DIK_RETURN])
+			}
+
+			/*ダッシュの処理(担当：サカイ)*/
+			//ダッシュのトリガー
+			if (keys[DIK_RETURN])
+			{
+				runFlag = true;
+			}
+			else
+			{
+				runFlag = false;
+			}
+
+			//ダッシュ中の処理
+			if (runFlag)
+			{
+				//ダッシュしているときのみ慣性を持たせる
+				if (keys[DIK_A])
 				{
-					runFlag = true;
-					player.Velocity.X = 2;
+					if (runPower >= -6.0f)
+					{
+						runPower -= 0.2f;
+					}
 				}
-				else
+				else if (keys[DIK_D])
 				{
-					runFlag = false;
-					player.Velocity.X = 1;
+					if (runPower <= 6.0f)
+					{
+						runPower += 0.2f;
+					}
 				}
 			}
+			else if (!runFlag)
+			{
+				if (runPower <= 7 && runPower >= 0)
+				{
+					//ダッシュボタンを離したら徐々に減速
+					runPower -= 0.2f;
+					if (runPower < 1)
+					{
+						//上記の処理に引っかかってしまうので0に収束
+						runPower = 0.0f;
+					}
+				}
+				else if (runPower <= 0 && runPower >= -7)
+				{
+					runPower += 0.2f;
+					if (runPower > -1)
+					{
+						runPower = 0.0f;
+					}
+				}
+			}
+
 			//ベクトルとスピードを掛け合わせる
-			player.Center.X += player.Velocity.X * player.Spd;
+			player.Center.X += (player.Velocity.X * player.Spd) + runPower;
 
 			/*オブジェクトのランダム生成(担当：リュウ)*/
 			for (int i = 0; i < 5; i++)
@@ -395,7 +429,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				else if (!safeFlag && ownerTimer == 660)
 				{
 					//プレイヤーの死亡処理
-					isPAlive = false;
+					//isPAlive = false;
 				}
 				//ownerTimerが660となっているがサカイのPCが165fpsであるため
 				//165*4(つまりサカイのPC上で3秒)で660となっている。
@@ -527,6 +561,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::ScreenPrintf(0, 0, "scene = GAMEPLAY");
 			//Novice::ScreenPrintf(0, 20, "timer = %d", ownerTimer / 165);
 			Novice::ScreenPrintf(1100, 0, "score = %d%d%d%d", score[0], score[1], score[2], score[3]);
+			Novice::ScreenPrintf(0, 20, "runPower = %f", runPower);
 
 			break;
 
