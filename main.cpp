@@ -129,7 +129,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		switch (scene)
 		{
-		case TITLE:
+		case TITLE: //タイトル
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
@@ -143,7 +143,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			break;
 
-		case TUTORIAL:
+		case TUTORIAL: //チュートリアル
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
@@ -152,7 +152,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			break;
 
-		case GAMEPLAY:
+		case GAMEPLAY: //プレイ画面
 
 			/*自機の移動処理(担当：ゾ)*/
 			player.Velocity.X = 0;
@@ -491,7 +491,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			break;
 
-		case GAMEOVER:
+		case GAMEOVER: //ゲームオーバー
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
@@ -509,19 +509,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		switch (scene)
 		{
-		case TITLE:
+		case TITLE: //タイトル
 
 			Novice::ScreenPrintf(0,0,"scene = TITLE");
 
 			break;
 
-		case TUTORIAL:
+		case TUTORIAL: //チュートリアル
 
 			Novice::ScreenPrintf(0, 0, "scene = TUTORIAL");
 
 			break;
 
-		case GAMEPLAY:
+		case GAMEPLAY: //ゲームプレイ
 
 			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
@@ -565,7 +565,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			break;
 
-		case GAMEOVER:
+		case GAMEOVER: //ゲームオーバー
 
 			Novice::ScreenPrintf(0, 0, "scene = GAMEOVER");
 
