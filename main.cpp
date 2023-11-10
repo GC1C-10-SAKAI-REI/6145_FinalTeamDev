@@ -52,7 +52,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				cFlag--;
 				endFlag++;
 			}
-		}		
+		}
 		
 		/// ↑更新処理ここまで
 		
