@@ -20,7 +20,7 @@ typedef struct FallenObj
 	Object Info;
 	bool ColFlag;
 	bool AtkFlag;
-	bool IsAlive;
+	int IsAlive;//0：死んでる 1：生きてる 2：落ちる演出中
 	int ResTimer;
 	bool WeightFlag;//false：軽い物 true：重い物
 	int Hp;

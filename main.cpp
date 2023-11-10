@@ -40,7 +40,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	bool isPAlive = true;
 	//走っているフラグ
 	bool runFlag = false;
-	//
+	//慣性を持たせるための変数
 	float runPower = 0.0f;
 
 	/*プレイヤーが落とすオブジェクト*/
