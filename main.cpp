@@ -115,6 +115,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//
 	int score[4] = { 0 };
 
+	/*リソース関連*/
+	//プレイヤー
+	int playerTexHundle[] =
+	{
+		Novice::LoadTexture("./Resources./Pictures./player_Left.png"),
+		Novice::LoadTexture("./Resources./Pictures./player_Right.png")
+	};
+	//飼い主
+	int ownerTexHundle[] =
+	{
+		Novice::LoadTexture("./Resources./Pictures./mother_back.png"),
+		Novice::LoadTexture("./Resources./Pictures./mother_front.png")
+	};
+	//落下物
+	int objTexHundle[] =
+	{
+		Novice::LoadTexture("./Resources./Pictures./lightObject.png"),
+		Novice::LoadTexture("./Resources./Pictures./heavyObject.png")
+	};
+	//背景
+	int bgTexHundle[] =
+	{
+		Novice::LoadTexture("./Resources./Pictures./title.png"),
+		Novice::LoadTexture("./Resources./Pictures./gamePlay.png"),
+		Novice::LoadTexture("./Resources./Pictures./stage.png")
+	};
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
 	{
@@ -534,7 +561,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE: //タイトル
 
-			Novice::ScreenPrintf(0,0,"scene = TITLE");
+			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
 
 			break;
 
@@ -546,7 +573,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		case GAMEPLAY: //ゲームプレイ
 
+			//背景
+			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
+			//ステージ
+			Novice::DrawSprite(0, 360, bgTexHundle[2], 1, 1, 0, WHITE);
+			//飼い主
+			if (ownerTimer <= 650)
+			{
+				Novice::DrawSprite(640, 100, ownerTexHundle[0], 1, 1, 0, WHITE);
+			}
+			else if(ownerTimer > 650)
+			{
+				Novice::DrawSprite(640, 100, ownerTexHundle[1], 1, 1, 0, WHITE);
+			}
+
 			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
+			//警告の演出
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
 
 			//ブロック(隠れる場所)
@@ -557,16 +599,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			// 自機
 			if (isPAlive)
 			{
-				fLib->DrawSquare(player.Center, player.Rad, player.Color);
+				if (player.Velocity.X <= 0)
+				{
+					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[0], 1, 1, 0, WHITE);
+				}
+				if (player.Velocity.X > 0)
+				{
+					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[1], 1, 1, 0, WHITE);
+				}
 			}
 			//軽いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
 				if (obj[i].IsAlive && !obj[i].WeightFlag)
 				{
-					obj[i].Info.Color = GREEN;
-
-					fLib->DrawSquare(obj[i].Info.Center,obj[i].Info.Rad,obj[i].Info.Color);
+					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[0], 1, 1, 0, WHITE);
 				}
 			}			
 			//重いオブジェクト
@@ -574,17 +621,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				if (obj[i].IsAlive && obj[i].WeightFlag)
 				{
-					obj[i].Info.Color = BLUE;
-
-					fLib->DrawSquare(obj[i].Info.Center, obj[i].Info.Rad, obj[i].Info.Color);
+					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[1], 1, 1, 0, WHITE);
 				}
 			}			
 
 			//デバッグ用
-			Novice::ScreenPrintf(0, 0, "scene = GAMEPLAY");
-			//Novice::ScreenPrintf(0, 20, "timer = %d", ownerTimer / 165);
 			Novice::ScreenPrintf(1100, 0, "score = %d%d%d%d", score[0], score[1], score[2], score[3]);
-			Novice::ScreenPrintf(0, 20, "runPower = %f", runPower);
 
 			break;
 
