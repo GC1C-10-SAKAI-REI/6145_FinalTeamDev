@@ -196,6 +196,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						runPower += 0.2f;
 					}
 				}
+				//Enterは押しているが左右キーを離した場合は減速する
+				if (!keys[DIK_A])
+				{
+					if (runPower <= 0 && runPower >= -7)
+					{
+						runPower += 0.2f;
+						if (runPower > -1)
+						{
+							runPower = 0.0f;
+						}
+					}
+				}
+				if (!keys[DIK_D])
+				{
+					if (runPower <= 7 && runPower >= 0)
+					{
+						runPower -= 0.2f;
+						if (runPower < 1)
+						{
+							runPower = 0.0f;
+						}
+					}
+				}
 			}
 			else if (!runFlag)
 			{
