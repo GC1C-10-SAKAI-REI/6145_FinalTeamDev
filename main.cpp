@@ -30,9 +30,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//自機
 	Object player =
 	{
-		{640,360},
+		{640,580},
 		{0,0},
-		32,
+		64,
 		6,
 		BLACK
 	};
@@ -51,7 +51,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		obj[i] = 
 		{
 			{
-				{float(120 + (120 * i)),360},
+				{float(450 + (120 * i)),600},
 				{0,0},
 				32,
 				0,
@@ -84,9 +84,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		block[i] =
 		{
-			{float(64 + i * 200),360.0f},
+			{float(150 + i * 1000),540},
 			{0,0},
-			64,
+			96,
 			0,
 			WHITE
 		};
@@ -575,17 +575,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//背景
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
-			//ステージ
-			Novice::DrawSprite(0, 360, bgTexHundle[2], 1, 1, 0, WHITE);
 			//飼い主
 			if (ownerTimer <= 650)
 			{
-				Novice::DrawSprite(640, 100, ownerTexHundle[0], 1, 1, 0, WHITE);
+				Novice::DrawSprite(280, 0, ownerTexHundle[0], 1, 1, 0, WHITE);
 			}
 			else if(ownerTimer > 650)
 			{
-				Novice::DrawSprite(640, 100, ownerTexHundle[1], 1, 1, 0, WHITE);
+				Novice::DrawSprite(280, 0, ownerTexHundle[1], 1, 1, 0, WHITE);
 			}
+			//ステージ
+			Novice::DrawSprite(0, 600, bgTexHundle[2], 1, 1, 0, WHITE);
 
 			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
 			//警告の演出
