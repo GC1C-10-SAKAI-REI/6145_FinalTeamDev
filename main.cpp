@@ -479,7 +479,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				else if (!safeFlag && ownerTimer == 660)
 				{
 					//プレイヤーの死亡処理
-					//isPAlive = false;
+					isPAlive = false;
 				}
 				//ownerTimerが660となっているがサカイのPCが165fpsであるため
 				//165*4(つまりサカイのPC上で3秒)で660となっている。
