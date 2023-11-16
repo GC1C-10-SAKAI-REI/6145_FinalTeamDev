@@ -1,4 +1,4 @@
-#define WINDOW_WIDTH 1280
+#define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 720
 #define WORLD_WIDTH 3840
 
@@ -76,7 +76,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//振り向くまでの時間
 	int ownerTimer = 0;
 
-	/*ブロック*/
+	/*ブロック(隠れる場所)*/
 	const int bNum = 2;
 	Object block[bNum];
 	//初期化
@@ -84,13 +84,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		block[i] =
 		{
-			{float(150 + i * 1000),540},
+			{0,540},
 			{0,0},
 			96,
 			0,
 			WHITE
 		};
 	}
+	block[0].Center.X = block[0].Rad + 32;
+	block[1].Center.X = WINDOW_WIDTH - (block[1].Rad + 32);
 	//true：隠れている false：はみ出てる
 	bool isHyding[bNum] = { false };
 	// オブジェクトの一つどれかに隠れてたらtrue
@@ -271,6 +273,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//ベクトルとスピードを掛け合わせる
 			player.Center.X += (player.Velocity.X * player.Spd) + runPower;
+
+			//自機の移動制限
+			if (player.Center.X - player.Rad < 0)
+			{
+				player.Center.X = player.Rad;
+			}
+			else if(player.Center.X + player.Rad > WINDOW_WIDTH)
+			{
+				player.Center.X = WINDOW_WIDTH - player.Rad;
+			}
 
 			/*オブジェクトのランダム生成(担当：リュウ)*/
 			for (int i = 0; i < 5; i++)
