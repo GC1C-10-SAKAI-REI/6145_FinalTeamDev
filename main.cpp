@@ -147,6 +147,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Novice::LoadTexture("./Resources./Pictures./stage.png")
 	};
 
+	int numTexHundle[] =
+	{
+		Novice::LoadTexture("./Resources./Pictures./num_0.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_1.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_2.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_3.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_4.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_5.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_6.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_7.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_8.png"),
+		Novice::LoadTexture("./Resources./Pictures./num_9.png"),
+	};
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
 	{
@@ -657,10 +671,51 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[1], 1, 1, 0, WHITE);
 				}
-			}			
-
-			//デバッグ用
-			Novice::ScreenPrintf(1100, 0, "score = %d%d%d%d", score[0], score[1], score[2], score[3]);
+			}
+			//スコア
+			for (int i = 0; i < 4; i++)
+			{
+				if (score[i] == 0)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[0], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 1)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[1], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 2)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[2], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 3)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[3], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 4)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[4], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 5)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[5], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 6)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[6], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 7)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[7], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 8)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[8], 1, 1, 0, WHITE);
+				}
+				if (score[i] == 9)
+				{
+					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[9], 1, 1, 0, WHITE);
+				}
+			}
 
 			break;
 
