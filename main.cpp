@@ -30,7 +30,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//自機
 	Object player =
 	{
-		{640,580},
+		{800,580},
 		{0,0},
 		64,
 		6,
@@ -51,7 +51,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		obj[i] = 
 		{
 			{
-				{float(450 + (120 * i)),600},
+				{float(270 + (256 * i)),550},
 				{0,0},
 				32,
 				0,
@@ -75,6 +75,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	/*敵*/
 	//振り向くまでの時間
 	int ownerTimer = 0;
+	//オーナーがこちらを向いているかどうか
+	bool isOwnerLook = false;
+	//赤くするための四角の色
+	unsigned int ownerEffect = 0xFF000000;
+	//α値の増減を切り替える為のフラグ
+	int changeFlag = 0;
+	//エフェクト
+	int effectEnd = 0;
 
 	/*ブロック(隠れる場所)*/
 	const int bNum = 2;
@@ -97,11 +105,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	bool isHyding[bNum] = { false };
 	// オブジェクトの一つどれかに隠れてたらtrue
 	bool safeFlag = false;
-
-	//演出の為の変数
-	unsigned int ownerEffect = 0xFF000000;
-	int changeFlag = 0;
-	int effectEnd = 0;
 
 	//シーン切り替え用列挙体
 	enum Scene
@@ -163,7 +166,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
 				scene = TUTORIAL;
+
+				/*初期化*/
+				//プレイヤー
+				player.Center.X = 800;
+				player.Velocity.X = 0;
 				isPAlive = true;
+				//飼い主
+				isOwnerLook = false;
+				ownerTimer = 0;
+				effectEnd = 0;
+				//落とすオブジェクト
 				for (int i = 0; i < remainObj; i++)
 				{
 					obj[i].Hp = 1;
@@ -488,7 +501,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					player.Color = RED;
 				}
-				else if (!safeFlag && ownerTimer == 660)
+				else if (!safeFlag && isOwnerLook)
 				{
 					//プレイヤーの死亡処理
 					isPAlive = false;
@@ -496,10 +509,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				//ownerTimerが660となっているがサカイのPCが165fpsであるため
 				//165*4(つまりサカイのPC上で3秒)で660となっている。
 				//皆のPCが60fpsなら240に値を修正しといてくれ
-				if (ownerTimer > 660)
+				if (ownerTimer > 825)
 				{
 					ownerTimer = 0;
 					effectEnd = 0;
+				}
+
+				if (ownerTimer >= 0 && ownerTimer < 660)
+				{
+					isOwnerLook = false;
+				}
+				else if(ownerTimer >= 660 && ownerTimer <= 742)
+				{
+					isOwnerLook = true;
 				}
 			}
 			//飼い主が振り向く演出の処理
