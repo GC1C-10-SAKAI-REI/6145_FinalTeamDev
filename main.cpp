@@ -52,9 +52,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		obj[i] = 
 		{
 			{
-				{float(270 + (256 * i)),550},
+				{float(290 + (256 * i)),580},
 				{0,0},
-				32,
+				64,
 				0,
 				0x00000000
 			},
@@ -138,16 +138,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int objTexHundle[] =
 	{
 		Novice::LoadTexture("./Resources./Pictures./lightObject.png"),
-		Novice::LoadTexture("./Resources./Pictures./heavyObject.png")
+		Novice::LoadTexture("./Resources./Pictures./heavyObject.png"),
+		Novice::LoadTexture("./Resources./Pictures./heavyObject_1.png"),
+		Novice::LoadTexture("./Resources./Pictures./heavyObject_2.png")
 	};
 	//背景
 	int bgTexHundle[] =
 	{
 		Novice::LoadTexture("./Resources./Pictures./title.png"),
 		Novice::LoadTexture("./Resources./Pictures./gamePlay.png"),
-		Novice::LoadTexture("./Resources./Pictures./stage.png")
+		Novice::LoadTexture("./Resources./Pictures./stage.png"),
+		Novice::LoadTexture("./Resources./Pictures./gameOver.png")
 	};
-
+	//スコア用の数字
 	int numTexHundle[] =
 	{
 		Novice::LoadTexture("./Resources./Pictures./num_0.png"),
@@ -189,6 +192,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				isPAlive = true;
 				runFlag = false;
 				runPower = 0;
+				hideEffect = 0x69696900;
 				//飼い主
 				isOwnerLook = false;
 				ownerTimer = 0;
@@ -285,6 +289,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					//ダッシュボタンを離したら徐々に減速
 					runPower -= 0.2f;
+
 					if (runPower < 1)
 					{
 						//上記の処理に引っかかってしまうので0に収束
@@ -323,11 +328,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					number[i] = rand();
 					if (number[i] % 2 == 0)
 					{
+						obj[i].Info.Center.Y = 580;
 						obj[i].WeightFlag = false;
 						obj[i].Hp = lightObjHp;
 					}
 					if (number[i] % 2 == 1)
 					{
+						obj[i].Info.Center.Y = 520;
 						obj[i].WeightFlag = true;
 						obj[i].Hp = heavyObjHp;
 					}
@@ -503,16 +510,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//プレイヤーが隠れている時の演出
 			if (safeFlag)
 			{
-				if (hideEffect <= 0x696969CF)
+				if (hideEffect <= 0x696969B4)
 				{
-					hideEffect += 3;
+					hideEffect += 4;
 				}
 			}
 			else if (!safeFlag)
 			{
 				if (hideEffect > 0x69696900)
 				{
-					hideEffect -= 3;
+					hideEffect -= 4;
 				}
 			}
 
@@ -532,7 +539,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				else if (!safeFlag && isOwnerLook)
 				{
 					//プレイヤーの死亡処理
-					isPAlive = false;
+					//isPAlive = false;
 				}
 				//ownerTimerが660となっているがサカイのPCが165fpsであるため
 				//165*4(つまりサカイのPC上で3秒)で660となっている。
@@ -611,7 +618,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			break;
-		}		
+		}
 		
 		/// ↑更新処理ここまで
 		
@@ -651,10 +658,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//ブレンドモード変更
 			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
-			//警告の演出
-			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
-			//隠れる演出
-			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, hideEffect, kFillModeSolid);
+			
 
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
@@ -686,9 +690,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				if (obj[i].IsAlive && obj[i].WeightFlag)
 				{
-					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[1], 1, 1, 0, WHITE);
+					if (obj[i].Hp == 3)
+					{
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[1], 1, 1, 0, WHITE);
+					}
+					else if (obj[i].Hp == 2)
+					{
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[2], 1, 1, 0, WHITE);
+					}
+					else if (obj[i].Hp == 1)
+					{
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[3], 1, 1, 0, WHITE);
+					}
 				}
 			}
+			//警告の演出
+			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
+			//隠れる演出
+			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, hideEffect, kFillModeSolid);
 			//スコア
 			for (int i = 0; i < 4; i++)
 			{
@@ -738,7 +757,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		case GAMEOVER: //ゲームオーバー
 
-			Novice::ScreenPrintf(0, 0, "scene = GAMEOVER");
+			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
 
 			break;
 		}
