@@ -1,6 +1,5 @@
 #define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 720
-#define WORLD_WIDTH 3840
 
 #include <Novice.h>
 #include <stdlib.h>
@@ -42,6 +41,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	bool runFlag = false;
 	//慣性を持たせるための変数
 	float runPower = 0.0f;
+	//プレイヤーが隠れた時のエフェクト
+	unsigned int hideEffect = 0x69696900;
 
 	/*プレイヤーが落とすオブジェクト*/
 	const int remainObj = 5;
@@ -82,7 +83,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//α値の増減を切り替える為のフラグ
 	int changeFlag = 0;
 	//エフェクト
-	int effectEnd = 0;
+	int oEffectEnd = 0;
 
 	/*ブロック(隠れる場所)*/
 	const int bNum = 2;
@@ -186,10 +187,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				player.Center.X = 800;
 				player.Velocity.X = 0;
 				isPAlive = true;
+				runFlag = false;
+				runPower = 0;
 				//飼い主
 				isOwnerLook = false;
 				ownerTimer = 0;
-				effectEnd = 0;
+				oEffectEnd = 0;
 				//落とすオブジェクト
 				for (int i = 0; i < remainObj; i++)
 				{
@@ -474,12 +477,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
-			//※テストプレイ用に死亡フラグリセット
-			if (keys[DIK_R] && !preKeys[DIK_R])
-			{
-				isPAlive = true;
-			}
-
 			//隠れていない時に黒くする
 			player.Color = BLACK;
 
@@ -502,6 +499,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
+
+			//プレイヤーが隠れている時の演出
+			if (safeFlag)
+			{
+				if (hideEffect <= 0x696969CF)
+				{
+					hideEffect += 3;
+				}
+			}
+			else if (!safeFlag)
+			{
+				if (hideEffect > 0x69696900)
+				{
+					hideEffect -= 3;
+				}
+			}
+
 			//プレイヤーの死亡条件
 			for (int i = 0; i < bNum; i++)
 			{
@@ -526,7 +540,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				if (ownerTimer > 825)
 				{
 					ownerTimer = 0;
-					effectEnd = 0;
+					oEffectEnd = 0;
 				}
 
 				if (ownerTimer >= 0 && ownerTimer < 660)
@@ -541,7 +555,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//飼い主が振り向く演出の処理
 			if (ownerTimer >= 220)
 			{
-				if (effectEnd <= 2)
+				if (oEffectEnd <= 2)
 				{
 					if (changeFlag % 2 == 0)
 					{
@@ -559,7 +573,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					else if (ownerEffect <= 0xFF000000)
 					{
 						changeFlag--;
-						effectEnd++;
+						oEffectEnd++;
 					}
 				}
 			}
@@ -635,9 +649,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//ステージ
 			Novice::DrawSprite(0, 600, bgTexHundle[2], 1, 1, 0, WHITE);
 
+			//ブレンドモード変更
 			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
 			//警告の演出
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
+			//隠れる演出
+			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, hideEffect, kFillModeSolid);
 
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
