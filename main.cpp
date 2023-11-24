@@ -657,8 +657,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::DrawSprite(0, 600, bgTexHundle[2], 1, 1, 0, WHITE);
 
 			//ブレンドモード変更
-			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
-			
+			Novice::SetBlendMode(BlendMode::kBlendModeNormal);			
 
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
