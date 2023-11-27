@@ -35,6 +35,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		6,
 		BLACK
 	};
+	//音源
+	int GAMEOVER_music;
+	GAMEOVER_music = Novice::LoadAudio("./gameover.wav");
+	int audioHandle1 = -1;
+	//int TITLE_music;
+	//int PLAY_music;
 	//true：生きてる false：死んでる
 	bool isPAlive = true;
 	//走っているフラグ
@@ -699,7 +705,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		switch (scene)
 		{
-		case TITLE: //タイトル
+		case TITLE:
+			Novice::PlayAudio(GAMEOVER_music, 0, 1.0f);
+			if (Novice::IsPlayingAudio(GAMEOVER_music) == 0 || audioHandle1 == -1)
+			{
+				audioHandle1 = Novice::PlayAudio(GAMEOVER_music, 0, 1.0f);
+			}
 
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
 
@@ -708,28 +719,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		case TUTORIAL: //チュートリアル
 
 			Novice::ScreenPrintf(0, 0, "scene = TUTORIAL");
-
+			Novice::StopAudio(GAMEOVER_music);
 			break;
 
-		case GAMEPLAY: //ゲームプレイ
-
-			//背景
-			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
-			//飼い主
-			if (ownerTimer <= 650)
-			{
-				Novice::DrawSprite(280, 0, ownerTexHundle[0], 1, 1, 0, WHITE);
-			}
-			else if(ownerTimer > 650)
-			{
-				Novice::DrawSprite(280, 0, ownerTexHundle[1], 1, 1, 0, WHITE);
-			}
-			//ステージ
-			Novice::DrawSprite(0, 600, bgTexHundle[2], 1, 1, 0, WHITE);
-
-			//ブレンドモード変更
-			Novice::SetBlendMode(BlendMode::kBlendModeNormal);			
-
+		case GAMEPLAY:
+			Novice::StopAudio(GAMEOVER_music);
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
 			{
@@ -825,9 +819,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			break;
 
-		case GAMEOVER: //ゲームオーバー
-
-			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
+		case GAMEOVER:
+			Novice::StopAudio(GAMEOVER_music);
+			Novice::ScreenPrintf(0, 0, "scene = GAMEOVER");
 
 			break;
 		}
