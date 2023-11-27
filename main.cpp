@@ -35,12 +35,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		6,
 		BLACK
 	};
-	//音源
-	int GAMEOVER_music;
-	GAMEOVER_music = Novice::LoadAudio("./gameover.wav");
-	int audioHandle1 = -1;
-	//int TITLE_music;
-	//int PLAY_music;
 	//true：生きてる false：死んでる
 	bool isPAlive = true;
 	//走っているフラグ
@@ -490,77 +484,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
-			/*オブジェクトのランダム生成(担当：リュウ)*/
-			//for (int i = 0; i < 5; i++)
-			//{
-			//	//life分け
-			//	if (positionFlag[i] == 1 && objectHp[i] <= 0)
-			//	{
-			//		number[i] = rand();
-			//		if (number[i] % 2 == 0)
-			//		{
-			//			objectHp[i] = hpA;
-			//		}
-			//		if (number[i] % 2 == 1)
-			//		{
-			//			objectHp[i] = hpB;
-			//		}
-			//	}
-
-			//	//軽いものと重いもの分け
-			//	if ((positionFlag[i] == 1) && (objectHp[i] == hpA))
-			//	{
-			//		objectFlag[i] = 0; //軽いもの
-			//	}
-			//	if ((positionFlag[i] == 1) && (objectHp[i] == hpB))
-			//	{
-			//		objectFlag[i] = 1; //重いもの
-			//	}
-
-			//	//テスト用
-			//	if (Novice::CheckHitKey(DIK_0))
-			//	{
-			//		objectHp[0] -= 3;
-			//	}
-
-			//	if (Novice::CheckHitKey(DIK_1))
-			//	{
-			//		objectHp[1] -= 3;
-			//	}
-
-			//	if (Novice::CheckHitKey(DIK_2))
-			//	{
-			//		objectHp[2] -= 3;
-			//	}
-
-			//	if (Novice::CheckHitKey(DIK_3))
-			//	{
-			//		objectHp[3] -= 3;
-			//	}
-			//	if (Novice::CheckHitKey(DIK_4))
-			//	{
-			//		objectHp[4] -= 3;
-			//	}
-
-			//	//Objcet再生成
-			//	if (objectHp[i] <= 0)
-			//	{
-			//		positionFlag[i] = 0;
-			//		responcount[i]++;
-			//	}
-			//	if (responcount[i] >= 100)
-			//	{
-			//		positionFlag[i] = 1;
-			//		responcount[i] = 0;
-			//	}
-			//}
-
-			//※テストプレイ用に死亡フラグリセット
-			if (keys[DIK_R] && !preKeys[DIK_R])
-			{
-				isPAlive = true;
-			}
-
 			//隠れていない時に黒くする
 			player.Color = BLACK;
 
@@ -599,7 +522,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					hideEffect -= 4;
 				}
 			}
-
 			//プレイヤーの死亡条件
 			for (int i = 0; i < bNum; i++)
 			{
@@ -705,12 +627,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		switch (scene)
 		{
-		case TITLE:
-			Novice::PlayAudio(GAMEOVER_music, 0, 1.0f);
-			if (Novice::IsPlayingAudio(GAMEOVER_music) == 0 || audioHandle1 == -1)
-			{
-				audioHandle1 = Novice::PlayAudio(GAMEOVER_music, 0, 1.0f);
-			}
+		case TITLE: //タイトル
 
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
 
@@ -719,11 +636,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		case TUTORIAL: //チュートリアル
 
 			Novice::ScreenPrintf(0, 0, "scene = TUTORIAL");
-			Novice::StopAudio(GAMEOVER_music);
+
 			break;
 
-		case GAMEPLAY:
-			Novice::StopAudio(GAMEOVER_music);
+		case GAMEPLAY: //ゲームプレイ
+
+			//背景
+			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
+			//飼い主
+			if (ownerTimer <= 650)
+			{
+				Novice::DrawSprite(280, 0, ownerTexHundle[0], 1, 1, 0, WHITE);
+			}
+			else if(ownerTimer > 650)
+			{
+				Novice::DrawSprite(280, 0, ownerTexHundle[1], 1, 1, 0, WHITE);
+			}
+			//ステージ
+			Novice::DrawSprite(0, 600, bgTexHundle[2], 1, 1, 0, WHITE);
+
+			//ブレンドモード変更
+			Novice::SetBlendMode(BlendMode::kBlendModeNormal);			
+
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
 			{
@@ -732,14 +666,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			// 自機
 			if (isPAlive)
 			{
-				if (player.Velocity.X <= 0)
-				{
-					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[0], 1, 1, 0, WHITE);
-				}
-				if (player.Velocity.X > 0)
-				{
-					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[1], 1, 1, 0, WHITE);
-				}
+				fLib->DrawSquare(player.Center, player.Rad, player.Color);
 			}
 			//軽いオブジェクト
 			for (int i = 0; i < remainObj; i++)
@@ -819,9 +746,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			break;
 
-		case GAMEOVER:
-			Novice::StopAudio(GAMEOVER_music);
-			Novice::ScreenPrintf(0, 0, "scene = GAMEOVER");
+		case GAMEOVER: //ゲームオーバー
+
+			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
 
 			break;
 		}
