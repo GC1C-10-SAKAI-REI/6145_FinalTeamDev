@@ -312,15 +312,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			if (runFlag)
 			{
 				//ダッシュしているときのみ慣性を持たせる
-				if (keys[DIK_A])
+				if (keys[DIK_A] || keys[DIK_LEFT])
 				{
 
+					runFlagL = 1;
 
 					if (runPower >= -6.0f)
 					{
 						runPower -= 0.2f;
 					}
-					runFlagL = 1;
 					runTimerL++;
 					if (runTimerL > 5)
 					{
@@ -333,13 +333,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					runTimerL = 0;
 				}
 
-				if (keys[DIK_D])
+				if (keys[DIK_D] || keys[DIK_RIGHT])
 				{
+					runFlagR = 1;
 					if (runPower <= 6.0f)
 					{
 						runPower += 0.2f;
 					}
-					runFlagR = 1;
 					runTimerR++;
 					if (runTimerR > 5)
 					{
@@ -800,32 +800,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 					}
 				}
-				if (runFlagL==1)
+
+				if (runFlag == true)
 				{
 					if (runFlagL == 1 && runTimerL < 3)
 					{
-						Novice::DrawSpriteRect(int(player.Center.X - player.Rad ), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 					}
-					if (runFlagL == 1 && runTimerL < 6)
+					if (runFlagL == 1 && (runTimerL > 2 && runTimerL < 6))
 					{
-						Novice::DrawSpriteRect(int(player.Center.X - player.Rad ), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 					}
-					}
-				if (runFlagR == 1)
-				{
+
 					if (runFlagR == 1 && runTimerR < 3)
 					{
-						Novice::DrawSpriteRect(int(player.Center.X - player.Rad ), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 					}
-					if (runFlagR == 1 && runTimerR < 6)
+					if (runFlagR == 1 && (runTimerR > 2 && runTimerR < 6))
 					{
-						Novice::DrawSpriteRect(int(player.Center.X - player.Rad ), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 					}
-
 
 				}
-
 			}
+
 
 
 
