@@ -322,7 +322,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						runPower -= 0.2f;
 					}
 					runTimerL++;
-					if (runTimerL > 5)
+					if (runTimerL > 11)
 					{
 						runTimerL = 0;
 					}
@@ -341,7 +341,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						runPower += 0.2f;
 					}
 					runTimerR++;
-					if (runTimerR > 5)
+					if (runTimerR > 11)
 					{
 						runTimerR = 0;
 					}
@@ -803,20 +803,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 				if (runFlag == true)
 				{
-					if (runFlagL == 1 && runTimerL < 3)
+					if (runFlagL == 1 && runTimerL < 6)
 					{
 						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 					}
-					if (runFlagL == 1 && (runTimerL > 2 && runTimerL < 6))
+					if (runFlagL == 1 && (runTimerL > 5 && runTimerL < 12))
 					{
 						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 					}
 
-					if (runFlagR == 1 && runTimerR < 3)
+					if (runFlagR == 1 && runTimerR < 6)
 					{
 						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 					}
-					if (runFlagR == 1 && (runTimerR > 2 && runTimerR < 6))
+					if (runFlagR == 1 && (runTimerR > 5 && runTimerR < 12))
 					{
 						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 					}
