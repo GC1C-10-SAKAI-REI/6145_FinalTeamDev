@@ -178,23 +178,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int runSheetL = Novice::LoadTexture("./Resources./Pictures./RunL.png");
 	int runSheetR = Novice::LoadTexture("./Resources./Pictures./RunR.png");
 #pragma endregion
-	//
-	//#pragma region //Attack
-	//	int attackTimerL = 0;
-	//	int attackTimerR = 0;
-	//
-	//	int attackFlagL = 0;
-	//	int attackFlagR = 0;
-	//
-	//	int attackSheetL = Novice::LoadTexture("./Resources./Pictures./AttackL.png");
-	//	int attackSheetR = Novice::LoadTexture("./Resources./Pictures./AttackR.png");
-	//
-	//#pragma endregion
-	//
+
+#pragma region //Attack
+	int attackTimer = 0;
+	/*int attackTimerR = 0;*/
+
+	int attackFlag = 0;
+	/*int attackFlagR = 0;*/
+
+	int attackSheetL = Novice::LoadTexture("./Resources./Pictures./AttackL.png");
+	int attackSheetR = Novice::LoadTexture("./Resources./Pictures./AttackR.png");
+
+#pragma endregion
+
 #pragma region //Stand by
 
 	int standbyFlagL = 0;
 	int standbyFlagR = 1;
+
+
 
 	int standbyTextureL = Novice::LoadTexture("./Resources./Pictures./standbyL.png");
 	int standbyTextureR = Novice::LoadTexture("./Resources./Pictures./standbyR.png");
@@ -433,6 +435,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
+			//動作の処理描画関数，当たり判定とは関係ない
+			if (keys[DIK_SPACE] /*&&!preKeys[DIK_SPACE]*/)
+			{
+				attackTimer++;
+				attackFlag = true;
+
+				if (!runFlag)
+				{
+					attackTimer++;
+				}
+				if (attackTimer >59)
+				{
+					attackTimer = 0;
+				}
+
+			}
+			else
+			{
+				attackTimer = 0;
+				attackFlag = false;
+			}
+
+
 			/*軽い物の処理(担当：ゾ)*/
 			for (int i = 0; i < remainObj; i++)
 			{
@@ -448,7 +473,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//接触中にスペースキーを押すとオブジェクトを落とす
 							if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 							{
+
 								obj[i].Hp -= 1;
+
+
 							}
 							//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 							if (runFlag)
@@ -760,14 +788,56 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (isPAlive)
 			{
-				if (standbyFlagL == 1 && walkFlagL == 0)
+				if (!attackFlag)
 				{
-					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureL, 1, 1, 0.0f, WHITE);
-				}
+					if ((standbyFlagL && !walkFlagL)&&!attackFlag)
+					{
+						Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureL, 1, 1, 0.0f, WHITE);
+					}
 
-				if (standbyFlagR == 1 && walkFlagR == 0)
+					if ((standbyFlagR && !walkFlagR) && !attackFlag)
+					{
+						Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureR, 1, 1, 0.0f, WHITE);
+					}
+				}
+				if (attackFlag)
 				{
-					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureR, 1, 1, 0.0f, WHITE);
+					if (standbyFlagL == 1 && attackTimer < 15)
+					{
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, attackSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+					}
+					if (standbyFlagL == 1 && attackTimer < 30)
+					{
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, attackSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+					}
+					if (standbyFlagL == 1 && attackTimer < 45)
+					{
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, attackSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+					}
+					if (standbyFlagL == 1 && attackTimer < 60)
+					{
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, attackSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+					}
+
+
+					if (standbyFlagR == 1 && attackTimer < 15)
+					{
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+					}
+					if (standbyFlagR == 1 && attackTimer < 30)
+					{
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+					}
+					if (standbyFlagR == 1 && attackTimer < 45)
+					{
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+					}
+					if (standbyFlagR == 1 && attackTimer < 60)
+					{
+						Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+					}
+
+
 				}
 
 				if (runFlag == false)
