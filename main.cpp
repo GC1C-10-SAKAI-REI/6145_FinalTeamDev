@@ -211,7 +211,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				//落とすオブジェクト
 				for (int i = 0; i < remainObj; i++)
 				{
-					obj[i].Hp = 1;
+					if (!obj[i].WeightFlag)
+					{
+						obj[i].Hp = lightObjHp;
+					}
+					else if(obj[i].WeightFlag)
+					{
+						obj[i].Hp = heavyObjHp;
+					}
 				}
 
 				//遷移処理はここで記述すると
