@@ -196,7 +196,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
-				//scene = TUTORIAL;
 				/*初期化*/
 				//プレイヤー
 				player.Center.X = 800;
@@ -214,16 +213,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					obj[i].Hp = 1;
 				}
+
+				//遷移処理はここで記述すると
+				//不具合が起きるため下の描画処理に有り
 			}
 
 			break;
 
 		case TUTORIAL: //チュートリアル
 
-			//if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
-			//{
-			//	scene = GAMEPLAY;
-			//}
+			//遷移処理はここで記述すると
+			//不具合が起きるため下の描画処理に有り
 
 			break;
 
@@ -606,25 +606,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				score[1] = 0;
 			}
 
-			//ゲームオーバーへの遷移
-			//if (!isPAlive)
-			//{
-			//	scene = GAMEOVER;
-			//}
+			//遷移処理はここで記述すると
+			//不具合が起きるため下の描画処理に有り
 
-			//デバック用
-			if (keys[DIK_J] && preKeys[DIK_J] == 0)
-			{
-				isPAlive = false;
-			}
 			break;
 
 		case GAMEOVER: //ゲームオーバー
 
-			//if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
-			//{
-			//	scene = TITLE;
-			//}
+			//遷移処理はここで記述すると
+			//不具合が起きるため下の描画処理に有り
 
 			break;
 		}
@@ -638,6 +628,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		switch (scene)
 		{
 		case TITLE: //タイトル
+			/*オーディオ関係*/
 			tutorialScene = 0;
 			gameoverplay = -1;
 			if (Novice::IsPlayingAudio(titleBGMplay) == 0 || titleBGMplay == -1)
@@ -671,11 +662,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 
 		case GAMEPLAY: //ゲームプレイ
+			/*オーディオ関係*/
 			if (Novice::IsPlayingAudio(titleBGMplay) == 1)
 			{
 				Novice::StopAudio(titleBGMplay);
 			}
-
 			if (Novice::IsPlayingAudio(playBGMplay) == 0 || playBGMplay == -1)
 			{
 				if (scene == GAMEPLAY)
@@ -683,7 +674,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					playBGMplay = Novice::PlayAudio(audioHundle[1], 1, 0.5);
 				}
 			}
-			//ゲームオーバー条件
+
+			//ゲームオーバーへの遷移
 			if (!isPAlive)
 			{
 				Novice::StopAudio(playBGMplay);
@@ -716,7 +708,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			// 自機
 			if (isPAlive)
 			{
-				fLib->DrawSquare(player.Center, player.Rad, player.Color);
+				if (player.Velocity.X <= 0)
+				{
+					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[0], 1, 1, 0, WHITE);
+				}
+				if (player.Velocity.X > 0)
+				{
+					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[1], 1, 1, 0, WHITE);
+				}
 			}
 			//軽いオブジェクト
 			for (int i = 0; i < remainObj; i++)
@@ -797,6 +796,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 
 		case GAMEOVER: //ゲームオーバー
+			/*オーディオ関係*/
 			if (gameoverplay == -1)
 			{
 				if (scene == GAMEOVER)
@@ -804,11 +804,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					gameoverplay = Novice::PlayAudio(audioHundle[3], 0, 0.5);
 				}
 			}
-
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
 				tutorialScene = 0;
 				Novice::StopAudio(gameoverplay);
+				//タイトルへ
 				scene = TITLE;
 			}
 
