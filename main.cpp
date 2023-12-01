@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{0,0},
 				64,
 				0,
-				0x00000000
+				WHITE
 			},
 			false,
 			false,
@@ -330,12 +330,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					{
 						obj[i].Info.Center.Y = 580;
 						obj[i].WeightFlag = false;
+						obj[i].Info.Color = WHITE;
 						obj[i].Hp = lightObjHp;
 					}
 					if (number[i] % 2 == 1)
 					{
 						obj[i].Info.Center.Y = 520;
 						obj[i].WeightFlag = true;
+						obj[i].Info.Color = WHITE;
 						obj[i].Hp = heavyObjHp;
 					}
 				}
@@ -390,6 +392,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					{
 						obj[i].ColFlag = false;
 						obj[i].ResTimer++;
+						if (obj[i].Info.Color >= 0xFFFFFF00)
+						{
+							obj[i].Info.Color -= 16;
+						}
 					}
 					//オブジェクト復活
 					if (obj[i].ResTimer > 100)
@@ -418,13 +424,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//接触中にスペースキーを押すとヘビーオブジェクトを落とす
 							if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
 							{
-								obj[i].AtkFlag = true;
 								obj[i].Hp -= 1;
 							}
 							//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 							if (runFlag && !breakFlag[i])
 							{
-								obj[i].AtkFlag = true;
 								obj[i].Hp -= 1;
 								//break;
 							}
@@ -452,35 +456,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				if (obj[i].WeightFlag)
 				{
 					//ヘビーオブジェクトが落ちた
-					if (obj[i].AtkFlag && obj[i].Hp <= 0)
+					if (!obj[i].IsAlive)
 					{
 						obj[i].ColFlag = false;
 						obj[i].ResTimer++;
+						if (obj[i].Info.Color >= 0xFFFFFF00)
+						{
+							obj[i].Info.Color -= 16;
+						}
 					}
-
+					//リスポーン処理
 					if (obj[i].ResTimer > 100)
 					{
 						if (!obj[i].IsAlive)
 						{
 							obj[i].IsAlive = true;
-							obj[i].AtkFlag = false;
 							obj[i].ResTimer = 0;
 						}
 					}
-				}
-			}
-			//objcet再生成
-			for (int i = 0; i < remainObj; i++)
-			{
-				if (obj[i].Hp <= 0)
-				{
-					obj[i].IsAlive = false;
-					obj[i].ResTimer++;
-				}
-				if (obj[i].ResTimer >= 100)
-				{
-					obj[i].IsAlive = true;
-					obj[i].ResTimer = 0;
 				}
 			}
 
@@ -679,27 +672,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//軽いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
-				if (obj[i].IsAlive && !obj[i].WeightFlag)
+				if (obj[i].Info.Color >= 0xFFFFFF00 && !obj[i].WeightFlag)
 				{
-					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[0], 1, 1, 0, WHITE);
+					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[0], 1, 1, 0, obj[i].Info.Color);
 				}
 			}			
 			//重いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
-				if (obj[i].IsAlive && obj[i].WeightFlag)
+				if (obj[i].Info.Color >= 0xFFFFFF00 && obj[i].WeightFlag)
 				{
 					if (obj[i].Hp == 3)
 					{
-						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[1], 1, 1, 0, WHITE);
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[1], 1, 1, 0, obj[i].Info.Color);
 					}
 					else if (obj[i].Hp == 2)
 					{
-						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[2], 1, 1, 0, WHITE);
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[2], 1, 1, 0, obj[i].Info.Color);
 					}
-					else if (obj[i].Hp == 1)
+					else if (obj[i].Hp <= 1)
 					{
-						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[3], 1, 1, 0, WHITE);
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[3], 1, 1, 0, obj[i].Info.Color);
 					}
 				}
 			}
