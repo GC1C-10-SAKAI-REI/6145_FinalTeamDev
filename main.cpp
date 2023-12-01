@@ -59,7 +59,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				WHITE
 			},
 			false,
-			false,
 			true,
 			0,
 			false,
