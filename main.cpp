@@ -121,9 +121,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//
 	int score[4] = { 0 };
 
-	/*int titleTimer = 0;*/
 
 	/*リソース関連*/
+
+	//タイトルに関するタイマー
+	int titleTimer = 0;
+	int titleTimer2 = 0;
+	//ゲームオーバーに関するタイマー＆＆フラグ
+	int gameOverTimer = 0;
+	int gameOverFlag = 0;
+	int gameOverFlagTimer = 0;
 
 	//飼い主
 	int ownerTexHundle[] =
@@ -145,11 +152,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Novice::LoadTexture("./Resources./Pictures./title.png"),//差し替えました
 		Novice::LoadTexture("./Resources./Pictures./background.png"),//差し替えました
 		Novice::LoadTexture("./Resources./Pictures./stage.png"),//差し替えました
-		Novice::LoadTexture("./Resources./Pictures./gameOver.png"),
-		Novice::LoadTexture("./Resources./Pictures./title2.png")//タイトル２追加した
+		Novice::LoadTexture("./Resources./Pictures./gameover.png"),
+		Novice::LoadTexture("./Resources./Pictures./title2.png"),//タイトル2追加した
+		Novice::LoadTexture("./Resources./Pictures./gameover2.png")//ゲームオーバー2追加
+
 	};
 	//スコア用の数字
 	int numberHandle = Novice::LoadTexture("./Resources./Pictures./num.png");
+	int scoreHandle = Novice::LoadTexture("./Resources./Pictures./score.png");
+
+	//隠れ場所
+	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");
 
 	//プレイヤー
 #pragma region //WalkTexturhandle
@@ -215,6 +228,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE: //タイトル
 
+			//タイトルの表示タイマ
+			if (titleTimer < 30)
+			{
+				titleTimer++;
+
+			}
+			else
+			{
+				titleTimer = 0;
+			}
+
+			if (titleTimer2 < 39)
+			{
+				titleTimer2++;
+
+			}
+			else
+			{
+				titleTimer2 = 0;
+			}
+
+
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
 				scene = TUTORIAL;
@@ -239,16 +274,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 
-			////titleTimer追加
-			//if (titleTimer < 30)
-			//{
-			//	titleTimer++;
-			//}
-
-			//else if (titleTimer > 60)
-			//{
-			//	titleTimer = 0;
-			//}
 
 
 
@@ -269,7 +294,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			player.Velocity.X = 0;
 
 			//ベクトル決め
-			if (keys[DIK_A] || keys[DIK_LEFT])
+			if (keys[DIK_A])
 			{
 				player.Velocity.X = -1;
 
@@ -288,7 +313,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				walkFlagL = 0;
 				walkTimerL = 0;
 			}
-			if (keys[DIK_D] || keys[DIK_RIGHT])
+			if (keys[DIK_D])
 			{
 				player.Velocity.X = 1;
 				//歩く描画Right
@@ -323,7 +348,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			if (runFlag)
 			{
 				//ダッシュしているときのみ慣性を持たせる
-				if (keys[DIK_A] || keys[DIK_LEFT])
+				if (keys[DIK_A])
 				{
 
 					runFlagL = 1;
@@ -344,7 +369,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					runTimerL = 0;
 				}
 
-				if (keys[DIK_D] || keys[DIK_RIGHT])
+				if (keys[DIK_D])
 				{
 					runFlagR = 1;
 					if (runPower <= 6.0f)
@@ -673,7 +698,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				else if (!safeFlag && isOwnerLook)
 				{
 					//プレイヤーの死亡処理
-					//isPAlive = false;
+					isPAlive = false;
 				}
 				//ownerTimerが660となっているがサカイのPCが165fpsであるため
 				//165*4(つまりサカイのPC上で3秒)で660となっている。
@@ -746,10 +771,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		case GAMEOVER: //ゲームオーバー
 
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
+			//ゲームオーバーに関するタイマー
+			if (gameOverTimer < 30)
 			{
-				scene = TITLE;
+				gameOverTimer++;
 			}
+			else
+			{
+				gameOverTimer = 0;
+			}
+			//エンター連打でゲームオーバー画面を通り抜けないためのフラグ
+			if (gameOverFlagTimer < 100)
+			{
+				gameOverFlagTimer++;
+			}
+			else
+			{
+				gameOverFlag = 1;
+			}
+			if (gameOverFlag == 1)
+			{
+				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
+				{
+					scene = TITLE;
+					gameOverFlagTimer = 0;
+					gameOverFlag = 0;
+				}
+			}
+
 
 			break;
 		}
@@ -768,12 +817,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//背景
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
 
-			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
-			/*if (titleTimer > 31)
+			if (titleTimer2 < 10)
 			{
-				Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
+				Novice::DrawSpriteRect(600, 600, 0, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+			}
+			if (titleTimer2 > 9 && titleTimer2 < 20)
+			{
+				Novice::DrawSpriteRect(600, 600, 128, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+			}
+			if (titleTimer2 > 19 && titleTimer2 < 30)
+			{
+				Novice::DrawSpriteRect(600, 600, 256, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+			}
+			if (titleTimer2 > 29 && titleTimer2 < 40)
+			{
+				Novice::DrawSpriteRect(600, 600, 384, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+			}
 
-			}*/
+
+
+			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
+			if (titleTimer < 15)
+			{
+				Novice::DrawSprite(600, 400, bgTexHundle[4], 1, 1, 0, WHITE);
+
+			}
 			break;
 
 		case TUTORIAL: //チュートリアル
@@ -787,7 +855,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//背景
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
 
-			//飼い主
+
 			if (ownerTimer <= 650)
 			{
 				Novice::DrawSprite(280, 0, ownerTexHundle[0], 1, 1, 0, WHITE);
@@ -805,9 +873,42 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
 			{
-				fLib->DrawSquares(block, i);
+				Novice::DrawSprite((int)(block[i].Center.X - block[i].Rad), (int)(block[i].Center.Y - block[i].Rad), bookHandle, 1, 1, 0.0f, WHITE);
 			}
-			// 自機
+#pragma region //object
+			//軽いオブジェクト
+			for (int i = 0; i < remainObj; i++)
+			{
+				if (obj[i].IsAlive && !obj[i].WeightFlag)
+				{
+					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[0], 1, 1, 0, WHITE);
+				}
+			}
+			//重いオブジェクト
+			for (int i = 0; i < remainObj; i++)
+			{
+				if (obj[i].IsAlive && obj[i].WeightFlag)
+				{
+					if (obj[i].Hp == 3)
+					{
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[1], 1, 1, 0, WHITE);
+					}
+					else if (obj[i].Hp == 2)
+					{
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[2], 1, 1, 0, WHITE);
+					}
+					else if (obj[i].Hp == 1)
+					{
+						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[3], 1, 1, 0, WHITE);
+					}
+				}
+			}
+#pragma endregion
+
+#pragma region 			// 自機
+
+
+
 
 			if (isPAlive)
 			{
@@ -932,7 +1033,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					if (!attackFlag)
 					{
-						if (runFlagL == 1)
+						if (runFlagL && !runFlagR)
 						{
 							if (runTimerL < 6)
 							{
@@ -943,7 +1044,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 							}
 						}
-						if (runFlagR == 1)
+						if ((runFlagR && !runFlagL) || (runFlagL && runFlagR))
 						{
 							if (runTimerR < 6)
 							{
@@ -958,41 +1059,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
+#pragma endregion
 
-
-
-			//軽いオブジェクト
-			for (int i = 0; i < remainObj; i++)
-			{
-				if (obj[i].IsAlive && !obj[i].WeightFlag)
-				{
-					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[0], 1, 1, 0, WHITE);
-				}
-			}
-			//重いオブジェクト
-			for (int i = 0; i < remainObj; i++)
-			{
-				if (obj[i].IsAlive && obj[i].WeightFlag)
-				{
-					if (obj[i].Hp == 3)
-					{
-						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[1], 1, 1, 0, WHITE);
-					}
-					else if (obj[i].Hp == 2)
-					{
-						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[2], 1, 1, 0, WHITE);
-					}
-					else if (obj[i].Hp == 1)
-					{
-						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[3], 1, 1, 0, WHITE);
-					}
-				}
-			}
 			//警告の演出
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
 			//隠れる演出
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, hideEffect, kFillModeSolid);
 			//スコア
+			Novice::DrawSprite(1225, 0, scoreHandle, 1, 1, 0, WHITE);
 			for (int i = 0; i < 4; i++)
 			{
 				if (score[i] == 0)
@@ -1041,8 +1115,58 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		case GAMEOVER: //ゲームオーバー
 
-			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
+			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
 
+			Novice::DrawSprite(640, 0, scoreHandle, 1, 1, 0, WHITE);
+			for (int i = 0; i < 4; i++)
+			{
+				if (score[i] == 0)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 0, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 1)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 32, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 2)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 64, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 3)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 96, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 4)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 128, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 5)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 160, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 6)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 192, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 7)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 224, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 8)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 256, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 9)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 288, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+			}
+
+			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
+			if (gameOverTimer < 15)
+			{
+				Novice::DrawSprite(0, 0, bgTexHundle[5], 1, 1, 0, WHITE);
+			}
 			break;
 		}
 
