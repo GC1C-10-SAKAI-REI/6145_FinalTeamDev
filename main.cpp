@@ -121,6 +121,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//
 	int score[4] = { 0 };
 
+	int titleTimer = 0;
+
 	/*リソース関連*/
 
 	//飼い主
@@ -140,10 +142,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//背景
 	int bgTexHundle[] =
 	{
-		Novice::LoadTexture("./Resources./Pictures./title.png"),
+		Novice::LoadTexture("./Resources./Pictures./title.png"),//差し替えました
 		Novice::LoadTexture("./Resources./Pictures./background.png"),//差し替えました
 		Novice::LoadTexture("./Resources./Pictures./stage.png"),//差し替えました
-		Novice::LoadTexture("./Resources./Pictures./gameOver.png")
+		Novice::LoadTexture("./Resources./Pictures./gameOver.png"),
+		Novice::LoadTexture("./Resources./Pictures./title2.png")//追加した
 	};
 	//スコア用の数字
 	int numberHandle = Novice::LoadTexture("./Resources./Pictures./num.png");
@@ -745,13 +748,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		/// ↓描画処理ここから
 
+
 		switch (scene)
 		{
 		case TITLE: //タイトル
 
-			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
+			//背景
+			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
 
-			break;
+			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
+			
+		/*	if (titleTimer < 30)
+			{
+				titleTimer++;
+				Novice::DrawSprite(0, 0, bgTexHundle[4], 1, 1, 0, WHITE);
+				
+			}
+			if (titleTimer > 60)
+			{
+				titleTimer = 0;
+			}
+			break;*/
 
 		case TUTORIAL: //チュートリアル
 
@@ -763,6 +780,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//背景
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
+
 			//飼い主
 			if (ownerTimer <= 650)
 			{
