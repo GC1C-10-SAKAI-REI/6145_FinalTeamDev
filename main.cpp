@@ -121,7 +121,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//
 	int score[4] = { 0 };
 
-	int titleTimer = 0;
+	/*int titleTimer = 0;*/
 
 	/*リソース関連*/
 
@@ -146,7 +146,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Novice::LoadTexture("./Resources./Pictures./background.png"),//差し替えました
 		Novice::LoadTexture("./Resources./Pictures./stage.png"),//差し替えました
 		Novice::LoadTexture("./Resources./Pictures./gameOver.png"),
-		Novice::LoadTexture("./Resources./Pictures./title2.png")//追加した
+		Novice::LoadTexture("./Resources./Pictures./title2.png")//タイトル２追加した
 	};
 	//スコア用の数字
 	int numberHandle = Novice::LoadTexture("./Resources./Pictures./num.png");
@@ -154,46 +154,45 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//プレイヤー
 #pragma region //WalkTexturhandle
 
-
+	//歩くアニメーションのタイマー
 	int walkTimerL = 0;
 	int walkTimerR = 0;
-
+	//歩く向きのフラグ
 	int walkFlagL = 0;
 	int walkFlagR = 0;
+	//歩くの描画
 	int walkSheetL = Novice::LoadTexture("./Resources./Pictures./walkSheetL.png");
 	int walkSheetR = Novice::LoadTexture("./Resources./Pictures./walkSheetR.png");
 #pragma endregion
 
 #pragma region //runTexturhandle
+	//走るアニメーションのタイマー
 	int runTimerL = 0;
 	int runTimerR = 0;
-
+	//走る向きのフラグ
 	int runFlagL = 0;
 	int runFlagR = 0;
-
+	//走るの描画
 	int runSheetL = Novice::LoadTexture("./Resources./Pictures./RunL.png");
 	int runSheetR = Novice::LoadTexture("./Resources./Pictures./RunR.png");
 #pragma endregion
 
 #pragma region //Attack
+	//アタックアニメーションのタイマー
 	int attackTimer = 0;
-	/*int attackTimerR = 0;*/
-
+	//アタックのフラグ
 	int attackFlag = 0;
-	/*int attackFlagR = 0;*/
-
+	//アタックの描画
 	int attackSheetL = Novice::LoadTexture("./Resources./Pictures./AttackL.png");
 	int attackSheetR = Novice::LoadTexture("./Resources./Pictures./AttackR.png");
 
 #pragma endregion
 
 #pragma region //Stand by
-
+	//待機するフラグ
 	int standbyFlagL = 0;
 	int standbyFlagR = 1;
-
-
-
+	//待機の描画
 	int standbyTextureL = Novice::LoadTexture("./Resources./Pictures./standbyL.png");
 	int standbyTextureR = Novice::LoadTexture("./Resources./Pictures./standbyR.png");
 
@@ -238,6 +237,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					obj[i].Hp = 1;
 				}
 			}
+
+
+			////titleTimer追加
+			//if (titleTimer < 30)
+			//{
+			//	titleTimer++;
+			//}
+
+			//else if (titleTimer > 60)
+			//{
+			//	titleTimer = 0;
+			//}
+
+
 
 			break;
 
@@ -436,12 +449,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//動作の処理描画関数，当たり判定とは関係ない
-		/*	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 			{
 				attackFlag = 1;
-				attackTimer = 0;
 
-			}*/
+			}
 			if (attackFlag == 1)
 			{
 				attackTimer++;
@@ -757,18 +769,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
 
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
-			
-		/*	if (titleTimer < 30)
+			/*if (titleTimer > 31)
 			{
-				titleTimer++;
-				Novice::DrawSprite(0, 0, bgTexHundle[4], 1, 1, 0, WHITE);
-				
-			}
-			if (titleTimer > 60)
-			{
-				titleTimer = 0;
-			}
-			break;*/
+				Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
+
+			}*/
+			break;
 
 		case TUTORIAL: //チュートリアル
 
@@ -805,18 +811,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (isPAlive)
 			{
+				//待機する描画
 				if (!attackFlag)
 				{
-					if ((standbyFlagL && !walkFlagL) && !attackFlag)
+					if (standbyFlagL && !walkFlagL)
 					{
 						Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureL, 1, 1, 0.0f, WHITE);
 					}
 
-					if ((standbyFlagR && !walkFlagR) && !attackFlag)
+					if (standbyFlagR && !walkFlagR)
 					{
 						Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureR, 1, 1, 0.0f, WHITE);
 					}
 				}
+				//アタックする描画
 				if (attackFlag)
 				{
 					if (standbyFlagL == 1) {
@@ -872,6 +880,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 				}
 
+				//歩く描画
 				if (runFlag == false)
 				{
 					if (!attackFlag)
@@ -918,32 +927,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						}
 					}
 				}
-
+				//走る描画
 				if (runFlag == true)
 				{
-					if (runFlagL == 1)
+					if (!attackFlag)
 					{
-						if (runTimerL < 6)
+						if (runFlagL == 1)
 						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							if (runTimerL < 6)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (runTimerL > 5 && runTimerL < 12)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							}
 						}
-						if (runTimerL > 5 && runTimerL < 12)
+						if (runFlagR == 1)
 						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							if (runTimerR < 6)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (runTimerR > 5 && runTimerR < 12)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							}
 						}
 					}
-					if (runFlagR == 1)
-					{
-						if (runTimerR < 6)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
-						}
-						if (runTimerR > 5 && runTimerR < 12)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
-						}
-					}
-
 				}
 			}
 
