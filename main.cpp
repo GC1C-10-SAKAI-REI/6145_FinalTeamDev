@@ -116,7 +116,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	};
 	//switch用変数
 	Scene scene = TITLE;
-	int tutorialScene = 0;
+
+	Object sceneTrans =
+	{
+		{0,0},
+		{0,0},
+		0,
+		0,
+		0x00000000
+	};
+	bool sceneTransFlag = false;
 
 	/*音楽*/
 	const int audio = 20;
@@ -220,21 +229,53 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						obj[i].Hp = heavyObjHp;
 					}
 				}
+				sceneTransFlag = true;
 
 				//遷移処理はここで記述すると
 				//不具合が起きるため下の描画処理に有り
+			}
+			//シーン遷移用の処理
+			if (sceneTransFlag)
+			{
+				if (fLib->SceneEnd(sceneTrans.Color))
+				{
+					sceneTransFlag = false;
+					scene = TUTORIAL;
+				}
 			}
 
 			break;
 
 		case TUTORIAL: //チュートリアル
-
-			//遷移処理はここで記述すると
-			//不具合が起きるため下の描画処理に有り
+			//シーン遷移用の処理
+			if (!sceneTransFlag)
+			{
+				fLib->SceneStart(sceneTrans.Color);
+			}
+			if (!sceneTransFlag)
+			{
+				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
+				{
+					sceneTransFlag = true;
+				}
+			}
+			if (sceneTransFlag)
+			{
+				if (fLib->SceneEnd(sceneTrans.Color))
+				{
+					sceneTransFlag = false;
+					scene = GAMEPLAY;
+				}
+			}
 
 			break;
 
 		case GAMEPLAY: //プレイ画面
+
+			if (!sceneTransFlag)
+			{
+				fLib->SceneStart(sceneTrans.Color);
+			}
 
 			/*自機の移動処理(担当：ゾ)*/
 			player.Velocity.X = 0;
@@ -636,8 +677,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE: //タイトル
 			/*オーディオ関係*/
-			tutorialScene = 0;
 			gameoverplay = -1;
+
 			if (Novice::IsPlayingAudio(titleBGMplay) == 0 || titleBGMplay == -1)
 			{
 				if (scene == TITLE)
@@ -645,26 +686,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					titleBGMplay = Novice::PlayAudio(audioHundle[0], 1, 0.3f);
 				}
 			}
-			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
-			{
-				tutorialScene = 1;
-				scene = TUTORIAL;
-			}
-
+			
+			//
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
-			Novice::ScreenPrintf(0, 15, "tutorialScene:%d", tutorialScene);
+			//遷移用の黒い四角
+			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
+
 			break;
 
-		case TUTORIAL: //チュートリアル
-			if (tutorialScene == 1)
-			{
-				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
-				{
-					scene = GAMEPLAY;
-				}
-			}
-			Novice::ScreenPrintf(0, 0, "scene = TUTORIAL");
-			Novice::ScreenPrintf(0, 15, "tutorialScene:%d", tutorialScene);
+		case TUTORIAL: //チュートリアル			
+			
+			//遷移用の黒い四角
+			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
+			
+			Novice::ScreenPrintf(0, 0, "flag = %d",sceneTransFlag);
 
 			break;
 
@@ -799,6 +834,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[9], 1, 1, 0, WHITE);
 				}
 			}
+			//遷移用の黒い四角
+			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
 
 			break;
 
@@ -813,7 +850,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
-				tutorialScene = 0;
 				Novice::StopAudio(gameoverplay);
 				//タイトルへ
 				scene = TITLE;

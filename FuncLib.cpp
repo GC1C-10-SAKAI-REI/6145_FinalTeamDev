@@ -37,3 +37,31 @@ bool FuncLib::PtoOCollision(Object& obj1, Object& obj2)
 	}
 	return false;
 }
+
+bool FuncLib::SceneEnd(unsigned int& c)
+{
+	if (c < 0x000000FF)
+	{
+		c += 5;
+	}
+
+	if (c >= 0x000000FF)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool FuncLib::SceneStart(unsigned int& c)
+{
+	if (c > 0x00000000)
+	{
+		c -= 3;
+	}
+
+	if (c <= 0x00000000)
+	{
+		return true;
+	}
+	return false;
+}
