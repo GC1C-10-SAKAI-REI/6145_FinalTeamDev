@@ -125,7 +125,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		0,
 		0x00000000
 	};
-	bool sceneTransFlag = false;
+	int sceneTransFlag = 0;
 
 	/*音楽*/
 	const int audio = 20;
@@ -229,17 +229,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						obj[i].Hp = heavyObjHp;
 					}
 				}
-				sceneTransFlag = true;
+				sceneTransFlag = 1;
 
 				//遷移処理はここで記述すると
 				//不具合が起きるため下の描画処理に有り
 			}
-			//シーン遷移用の処理
-			if (sceneTransFlag)
+
+			if (sceneTransFlag == 1)
 			{
 				if (fLib->SceneEnd(sceneTrans.Color))
 				{
-					sceneTransFlag = false;
+					sceneTransFlag = 2;
 					scene = TUTORIAL;
 				}
 			}
@@ -248,22 +248,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		case TUTORIAL: //チュートリアル
 			//シーン遷移用の処理
-			if (!sceneTransFlag)
+			if (sceneTransFlag == 2)
 			{
-				fLib->SceneStart(sceneTrans.Color);
+				if (fLib->SceneStart(sceneTrans.Color))
+				{
+					sceneTransFlag = 0;
+				}
 			}
-			if (!sceneTransFlag)
+			if (sceneTransFlag == 0)
 			{
 				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 				{
-					sceneTransFlag = true;
+					sceneTransFlag = 1;
 				}
 			}
-			if (sceneTransFlag)
+			if (sceneTransFlag == 1)
 			{
 				if (fLib->SceneEnd(sceneTrans.Color))
 				{
-					sceneTransFlag = false;
+					sceneTransFlag = 2;
 					scene = GAMEPLAY;
 				}
 			}
@@ -272,7 +275,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		case GAMEPLAY: //プレイ画面
 
-			if (!sceneTransFlag)
+			if (sceneTransFlag == 2)
 			{
 				fLib->SceneStart(sceneTrans.Color);
 			}
