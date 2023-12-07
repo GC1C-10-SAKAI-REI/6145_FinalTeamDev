@@ -15,8 +15,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Novice::Initialize(kWindowTitle, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	//自作関数クラス
 	FuncLib* fLib = new FuncLib();
@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	srand(currentTime);
 	//抽選の為の変数
 	int number[5] = { 0 };
-	
+
 	//自機
 	Object player =
 	{
@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	FallenObj obj[remainObj];
 	for (int i = 0; i < remainObj; i++)
 	{
-		obj[i] = 
+		obj[i] =
 		{
 			{
 				{float(290 + (256 * i)),580},
@@ -110,7 +110,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//シーン切り替え用列挙体
 	enum Scene
 	{
-		TITLE,   
+		TITLE,
 		TUTORIAL,
 		GAMEPLAY,
 		GAMEOVER,
@@ -123,17 +123,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	const int audio = 20;
 	int audioHundle[audio] =
 	{
-		Novice::LoadAudio("./Title.mp3"),//0
-		Novice::LoadAudio("./GamePlay1.mp3"),//1
-		Novice::LoadAudio("./GamePlay2.mp3"),//2
-		Novice::LoadAudio("./GameOver.mp3"),//3
+		Novice::LoadAudio("./Resources./Audio./Title.mp3"),//0
+		Novice::LoadAudio("./Resources./Audio./GamePlay1.mp3"),//1
+		Novice::LoadAudio("./Resources./Audio./GamePlay2.mp3"),//2
+		Novice::LoadAudio("./Resources./Audio./GameOver.mp3"),//3
 	};
 
 	int titleBGMplay = -1;
 	int playBGMplay = -1;
 	int gameoverplay = -1;
 
+	/*se*/
+	const int se = 20;
+	int seHundle[se] =
+	{
+		Novice::LoadAudio("./Resources./Audio./Cat.mp3"),    //猫の音
+		Novice::LoadAudio("./Resources./Audio./Glass.mp3"),	 //グラスが割れた
+		Novice::LoadAudio("./Resources./Audio./Bottle.mp3")  //瓶が割れた
+	};
+
+	int catSePlay = -1;
+	int glassSePlay = -1;
+	int bottleSePlay = -1;
+
+
+	//score変数
 	int score[4] = { 0 };
+
 
 	/*リソース関連*/
 	//プレイヤー
@@ -236,7 +252,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//ベクトル決め
 			if (keys[DIK_A] || keys[DIK_LEFT])
 			{
-				player.Velocity.X = -1;				
+				player.Velocity.X = -1;
 			}
 			else if (keys[DIK_D] || keys[DIK_RIGHT])
 			{
@@ -327,7 +343,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				player.Center.X = player.Rad;
 			}
-			else if(player.Center.X + player.Rad > WINDOW_WIDTH)
+			else if (player.Center.X + player.Rad > WINDOW_WIDTH)
 			{
 				player.Center.X = WINDOW_WIDTH - player.Rad;
 			}
@@ -353,7 +369,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
-			
+
 			/*軽い物の処理(担当：ゾ)*/
 			for (int i = 0; i < remainObj; i++)
 			{
@@ -413,7 +429,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							obj[i].ResTimer = 0;
 						}
 					}
-				}				
+				}
 			}
 
 			/*重い物の処理(担当：ゾ)*/
@@ -543,7 +559,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					ownerTimer++;
 				}
-				
+
 				if (safeFlag)
 				{
 					player.Color = RED;
@@ -566,7 +582,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					isOwnerLook = false;
 				}
-				else if(ownerTimer >= 660 && ownerTimer <= 742)
+				else if (ownerTimer >= 660 && ownerTimer <= 742)
 				{
 					isOwnerLook = true;
 				}
@@ -636,11 +652,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			break;
 		}
-		
-		/// ↑更新処理ここまで
-		
 
-		
+		/// ↑更新処理ここまで
+
+
+
 		/// ↓描画処理ここから
 
 		switch (scene)
@@ -657,8 +673,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
 			{
+
 				tutorialScene = 1;
 				scene = TUTORIAL;
+
+				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
+
 			}
 
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
@@ -682,6 +702,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			if (Novice::IsPlayingAudio(titleBGMplay) == 1)
 			{
 				Novice::StopAudio(titleBGMplay);
+				
 			}
 
 			if (Novice::IsPlayingAudio(playBGMplay) == 0 || playBGMplay == -1)
@@ -690,12 +711,47 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					playBGMplay = Novice::PlayAudio(audioHundle[1], 1, 0.5);
 				}
+
 			}
+			if ((keys[DIK_SPACE] && !preKeys[DIK_SPACE])||runFlag)
+			{
+
+				for (int i = 0; i < remainObj; i++)
+				{
+					if (!obj[i].ColFlag)
+					{
+						if (!obj[i].IsAlive)
+						{
+
+							//軽いものse
+							if (!obj[i].WeightFlag)
+							{
+								glassSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
+							}
+
+							//重いものse
+							else if (obj[i].WeightFlag)
+							{
+								bottleSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
+							}
+
+						}
+					}
+				}
+
+			}
+
+
 			//ゲームオーバー条件
 			if (!isPAlive)
 			{
 				Novice::StopAudio(playBGMplay);
 				Novice::StopAudio(titleBGMplay);
+				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
+
+				catSePlay = -1;
+				glassSePlay = -1;
+				bottleSePlay = -1;
 				scene = GAMEOVER;
 			}
 
@@ -706,7 +762,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				Novice::DrawSprite(280, 0, ownerTexHundle[0], 1, 1, 0, WHITE);
 			}
-			else if(ownerTimer > 650)
+			else if (ownerTimer > 650)
 			{
 				Novice::DrawSprite(280, 0, ownerTexHundle[1], 1, 1, 0, WHITE);
 			}
@@ -714,7 +770,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::DrawSprite(0, 600, bgTexHundle[2], 1, 1, 0, WHITE);
 
 			//ブレンドモード変更
-			Novice::SetBlendMode(BlendMode::kBlendModeNormal);			
+			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
 
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
@@ -733,7 +789,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[0], 1, 1, 0, WHITE);
 				}
-			}			
+			}
 			//重いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
