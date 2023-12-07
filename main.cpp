@@ -146,7 +146,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int glassSePlay = -1;
 	int bottleSePlay = -1;
 
-
+	bool sePlayFlag[3] = { false,false,false };
 	//score変数
 	int score[4] = { 0 };
 
@@ -713,9 +713,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 
 			}
-			if ((keys[DIK_SPACE] && !preKeys[DIK_SPACE])||runFlag)
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 			{
-
+				
 				for (int i = 0; i < remainObj; i++)
 				{
 					if (!obj[i].ColFlag)
@@ -726,13 +726,43 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//軽いものse
 							if (!obj[i].WeightFlag)
 							{
-								glassSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
+								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
 							}
 
 							//重いものse
 							else if (obj[i].WeightFlag)
 							{
-								bottleSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
+								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
+							}
+
+						}
+					}
+				}
+
+			}
+			if (runFlag)
+			{
+
+				for (int i = 0; i < remainObj; i++)
+				{
+					if (!obj[i].ColFlag)
+					{
+						if (!obj[i].IsAlive)
+						{
+
+							//軽いものse
+							if (!obj[i].WeightFlag && !sePlayFlag[1])
+							{
+								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
+								sePlayFlag[1] = true;
+							}
+							
+
+							//重いものse
+							if (obj[i].WeightFlag&& !sePlayFlag[2])
+							{
+								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
+								sePlayFlag[1] = true;
 							}
 
 						}
