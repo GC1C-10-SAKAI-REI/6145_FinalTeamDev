@@ -131,10 +131,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	const int audio = 20;
 	int audioHundle[audio] =
 	{
-		Novice::LoadAudio("./Title.mp3"),//0
-		Novice::LoadAudio("./GamePlay1.mp3"),//1
-		Novice::LoadAudio("./GamePlay2.mp3"),//2
-		Novice::LoadAudio("./GameOver.mp3"),//3
+		Novice::LoadAudio("./Resources./Audios./Title.mp3"),//0
+		Novice::LoadAudio("./Resources./Audios./GamePlay1.mp3"),//1
+		Novice::LoadAudio("./Resources./Audios./GamePlay2.mp3"),//2
+		Novice::LoadAudio("./Resources./Audios./GameOver.mp3"),//3
 	};
 
 	int titleBGMplay = -1;
