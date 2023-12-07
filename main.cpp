@@ -165,7 +165,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");
 
 	//プレイヤー
-#pragma region //WalkTexturhandle
+	//WalkTexturhandle
 
 	//歩くアニメーションのタイマー
 	int walkTimerL = 0;
@@ -176,9 +176,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//歩くの描画
 	int walkSheetL = Novice::LoadTexture("./Resources./Pictures./walkSheetL.png");
 	int walkSheetR = Novice::LoadTexture("./Resources./Pictures./walkSheetR.png");
-#pragma endregion
 
-#pragma region //runTexturhandle
+	//runTexturhandle
 	//走るアニメーションのタイマー
 	int runTimerL = 0;
 	int runTimerR = 0;
@@ -188,9 +187,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//走るの描画
 	int runSheetL = Novice::LoadTexture("./Resources./Pictures./RunL.png");
 	int runSheetR = Novice::LoadTexture("./Resources./Pictures./RunR.png");
-#pragma endregion
 
-#pragma region //Attack
+	//Attack
 	//アタックアニメーションのタイマー
 	int attackTimer = 0;
 	//アタックのフラグ
@@ -199,9 +197,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int attackSheetL = Novice::LoadTexture("./Resources./Pictures./AttackL.png");
 	int attackSheetR = Novice::LoadTexture("./Resources./Pictures./AttackR.png");
 
-#pragma endregion
-
-#pragma region //Stand by
+	//Stand by
 	//待機するフラグ
 	int standbyFlagL = 0;
 	int standbyFlagR = 1;
@@ -209,7 +205,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int standbyTextureL = Novice::LoadTexture("./Resources./Pictures./standbyL.png");
 	int standbyTextureR = Novice::LoadTexture("./Resources./Pictures./standbyR.png");
 
-#pragma endregion
 
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -875,7 +870,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				Novice::DrawSprite((int)(block[i].Center.X - block[i].Rad), (int)(block[i].Center.Y - block[i].Rad), bookHandle, 1, 1, 0.0f, WHITE);
 			}
-#pragma region //object
+			//object
 			//軽いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
@@ -903,9 +898,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
-#pragma endregion
-
-#pragma region 			// 自機
+// 自機
 
 
 
@@ -1058,8 +1051,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
-
-#pragma endregion
 
 			//警告の演出
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
