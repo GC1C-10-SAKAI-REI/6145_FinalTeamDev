@@ -211,37 +211,41 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
+			if (sceneTransFlag == 0)
 			{
-				/*初期化*/
-				//プレイヤー
-				player.Center.X = 800;
-				player.Velocity.X = 0;
-				isPAlive = true;
-				runFlag = false;
-				runPower = 0;
-				hideEffect = 0x69696900;
-				//飼い主
-				isOwnerLook = false;
-				ownerTimer = 0;
-				oEffectEnd = 0;
-				//落とすオブジェクト
-				for (int i = 0; i < remainObj; i++)
+				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 				{
-					if (!obj[i].WeightFlag)
+					/*初期化*/
+					//プレイヤー
+					player.Center.X = 800;
+					player.Velocity.X = 0;
+					isPAlive = true;
+					runFlag = false;
+					runPower = 0;
+					hideEffect = 0x69696900;
+					//飼い主
+					isOwnerLook = false;
+					ownerTimer = 0;
+					oEffectEnd = 0;
+					//落とすオブジェクト
+					for (int i = 0; i < remainObj; i++)
 					{
-						obj[i].Hp = lightObjHp;
+						if (!obj[i].WeightFlag)
+						{
+							obj[i].Hp = lightObjHp;
+						}
+						else if (obj[i].WeightFlag)
+						{
+							obj[i].Hp = heavyObjHp;
+						}
 					}
-					else if(obj[i].WeightFlag)
-					{
-						obj[i].Hp = heavyObjHp;
-					}
-				}
-				sceneTransFlag = 1;
+					sceneTransFlag = 1;
 
-				//遷移処理はここで記述すると
-				//不具合が起きるため下の描画処理に有り
+					//遷移処理はここで記述すると
+					//不具合が起きるため下の描画処理に有り
+				}
 			}
+			
 
 			if (sceneTransFlag == 1)
 			{
