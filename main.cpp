@@ -203,6 +203,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE: //タイトル
 
+			if (sceneTransFlag == 2)
+			{
+				if (fLib->SceneStart(sceneTrans.Color))
+				{
+					sceneTransFlag = 0;
+				}
+			}
+
 			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 			{
 				/*初期化*/
@@ -274,10 +282,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 
 		case GAMEPLAY: //プレイ画面
-
+			//シーン遷移時の演出
 			if (sceneTransFlag == 2)
 			{
-				fLib->SceneStart(sceneTrans.Color);
+				if (fLib->SceneStart(sceneTrans.Color))
+				{
+					sceneTransFlag = 0;
+				}
 			}
 
 			/*自機の移動処理(担当：ゾ)*/
@@ -667,6 +678,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//遷移処理はここで記述すると
 			//不具合が起きるため下の描画処理に有り
 
+			
+
 			break;
 		}
 		
@@ -851,15 +864,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					gameoverplay = Novice::PlayAudio(audioHundle[3], 0, 0.5);
 				}
 			}
-			if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
+			//遷移
+			if (sceneTransFlag == 0)
 			{
-				Novice::StopAudio(gameoverplay);
-				//タイトルへ
-				scene = TITLE;
+				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
+				{
+					sceneTransFlag = 1;
+				}
+			}
+			if (sceneTransFlag == 1)
+			{
+				if (fLib->SceneEnd(sceneTrans.Color))
+				{
+					Novice::StopAudio(gameoverplay);
+					sceneTransFlag = 2;
+					scene = TITLE;
+				}
 			}
 
 			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
-
+			//遷移用の黒い四角
+			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
+			
 			break;
 		}
 
