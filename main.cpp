@@ -149,6 +149,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int playBGMplay = -1;
 	int gameoverplay = -1;
 
+
+	/*se*/
+	const int se = 20;
+	int seHundle[se] =
+	{
+		Novice::LoadAudio("./Resources./Audios./Cat.mp3"),    //猫の音
+		Novice::LoadAudio("./Resources./Audios./Glass.mp3"),	 //グラスが割れた
+		Novice::LoadAudio("./Resources./Audios./Bottle.mp3")  //瓶が割れた
+	};
+
+	int catSePlay = -1;
+	int glassSePlay = -1;
+	int bottleSePlay = -1;
+
+	bool sePlayFlag[3] = { false,false,false };
+
+
 	int score[4] = { 0 };
 
 	/*リソース関連*/
@@ -844,8 +861,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					titleBGMplay = Novice::PlayAudio(audioHundle[0], 1, 0.3f);
 				}
+				
 			}
 			
+			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
+			{
+				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
+			}
 			//
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
 			if (titleTimer < 15)
@@ -878,12 +900,55 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					playBGMplay = Novice::PlayAudio(audioHundle[1], 1, 0.5);
 				}
 			}
+			
+
+			//se関連
+			//通常攻撃
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+			{
+
+				for (int i = 0; i < remainObj; i++)
+				{
+					if (!obj[i].ColFlag)
+					{
+						if (!obj[i].IsAlive)
+						{
+
+							//軽いものse
+							if (!obj[i].WeightFlag)
+							{
+								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
+							}
+
+							//重いものse
+							else if (obj[i].WeightFlag)
+							{
+								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
+							}
+
+						}
+					}
+				}
+			}
+			else
+			{
+				glassSePlay = -1;
+				bottleSePlay = -1;
+			}
+
 
 			//ゲームオーバーへの遷移
 			if (!isPAlive)
 			{
 				Novice::StopAudio(playBGMplay);
 				Novice::StopAudio(titleBGMplay);
+
+				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
+
+				catSePlay = -1;
+				glassSePlay = -1;
+				bottleSePlay = -1;
+
 				scene = GAMEOVER;
 			}
 
