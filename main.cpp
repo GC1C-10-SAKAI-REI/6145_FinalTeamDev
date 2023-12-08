@@ -220,25 +220,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (sceneTransFlag == 0)
 			{
-				if (titleTimer < 30)
-				{
-					titleTimer++;
-
-				}
-				else
-				{
-					titleTimer = 0;
-				}
-
-				if (titleTimer2 < 39)
-				{
-					titleTimer2++;
-
-				}
-				else
-				{
-					titleTimer2 = 0;
-				}
+				
 				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 				{
 					/*初期化*/
@@ -265,10 +247,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							obj[i].Hp = heavyObjHp;
 						}
 					}
+
 					sceneTransFlag = 1;
 
 					//遷移処理はここで記述すると
 					//不具合が起きるため下の描画処理に有り
+				}
+				if (titleTimer < 30)
+				{
+					titleTimer++;
+
+				}
+				else
+				{
+					titleTimer = 0;
+				}
+
+				if (titleTimer2 < 39)
+				{
+					titleTimer2++;
+
+				}
+				else
+				{
+					titleTimer2 = 0;
 				}
 			}
 
