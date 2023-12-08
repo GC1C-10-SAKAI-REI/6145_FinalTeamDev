@@ -1147,6 +1147,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					gameoverplay = Novice::PlayAudio(audioHundle[3], 0, 0.5);
 				}
 			}
+			
 			//遷移
 			if (sceneTransFlag == 0)
 			{
@@ -1166,7 +1167,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
-
+			if (gameOverTimer < 15)
+			{
+				Novice::DrawSprite(0, 0, bgTexHundle[5], 1, 1, 0, WHITE);
+			}
 			Novice::DrawSprite(640, 0, scoreHandle, 1, 1, 0, WHITE);
 			for (int i = 0; i < 4; i++)
 			{
