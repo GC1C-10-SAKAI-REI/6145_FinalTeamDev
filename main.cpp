@@ -157,6 +157,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int titleTimer = 0;
 	int titleTimer2 = 0;
 
+	//ゲームオーバーに関するタイマー
+	int gameOverTimer = 0;
 	//飼い主
 	int ownerTexHundle[] =
 	{
@@ -790,6 +792,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//遷移処理はここで記述すると
 			//不具合が起きるため下の描画処理に有り			
+			//ゲームオーバーに関するタイマー
+			if (gameOverTimer < 30)
+			{
+				gameOverTimer++;
+			}
+			else
+			{
+				gameOverTimer = 0;
+			}
 
 			break;
 		}
