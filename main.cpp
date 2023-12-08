@@ -78,7 +78,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		obj[i] =
 		{
-			{{float(290 + (256 * i)),580},{0,0},64,0,WHITE},false,true,0,false,1
+			{ {float(290 + (256 * i)),580},{0,0},64,0,WHITE },false,true,0,false,1
 		};
 	}
 	//連続で当たり判定を発生させないようにするフラグ
@@ -180,7 +180,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Novice::LoadTexture("./Resources./Pictures./gameover.png"),
 		Novice::LoadTexture("./Resources./Pictures./title2.png"),//タイトル2追加した
 		Novice::LoadTexture("./Resources./Pictures./gameover2.png")//ゲームオーバー2追加
-
 	};
 	//スコア用の数字
 	int numberHandle = Novice::LoadTexture("./Resources./Pictures./num.png");
@@ -367,7 +366,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//ダッシュのトリガー
 			if (keys[DIK_RETURN])
 			{
-
 				runFlag = true;
 			}
 			else
@@ -381,7 +379,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				//ダッシュしているときのみ慣性を持たせる
 				if (keys[DIK_A])
 				{
-
 					runFlagL = 1;
 
 					if (runPower >= -6.0f)
@@ -468,7 +465,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			//ベクトルとスピードを掛け合わせる
 			if (!attackFlag)
 			{
-
 				player.Center.X += (player.Velocity.X * player.Spd) + runPower;
 			}
 
@@ -510,7 +506,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 			{
 				attackFlag = 1;
-
 			}
 			if (attackFlag == 1)
 			{
