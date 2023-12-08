@@ -15,8 +15,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Novice::Initialize(kWindowTitle, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	//自作関数クラス
 	FuncLib* fLib = new FuncLib();
@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	srand(currentTime);
 	//抽選の為の変数
 	int number[5] = { 0 };
-	
+
 	//自機
 	Object player =
 	{
@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	FallenObj obj[remainObj];
 	for (int i = 0; i < remainObj; i++)
 	{
-		obj[i] = 
+		obj[i] =
 		{
 			{
 				{float(290 + (256 * i)),580},
@@ -109,7 +109,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//シーン切り替え用列挙体
 	enum Scene
 	{
-		TITLE,   
+		TITLE,
 		TUTORIAL,
 		GAMEPLAY,
 		GAMEOVER,
@@ -143,13 +143,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	int score[4] = { 0 };
 
+
 	/*リソース関連*/
-	//プレイヤー
-	int playerTexHundle[] =
-	{
-		Novice::LoadTexture("./Resources./Pictures./player_Left.png"),
-		Novice::LoadTexture("./Resources./Pictures./player_Right.png")
-	};
+
+	//タイトルに関するタイマー
+	int titleTimer = 0;
+	int titleTimer2 = 0;
+	//ゲームオーバーに関するタイマー＆＆フラグ
+	int gameOverTimer = 0;
+	int gameOverFlag = 0;
+	int gameOverFlagTimer = 0;
+
 	//飼い主
 	int ownerTexHundle[] =
 	{
@@ -167,25 +171,68 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//背景
 	int bgTexHundle[] =
 	{
-		Novice::LoadTexture("./Resources./Pictures./title.png"),
-		Novice::LoadTexture("./Resources./Pictures./gamePlay.png"),
-		Novice::LoadTexture("./Resources./Pictures./stage.png"),
-		Novice::LoadTexture("./Resources./Pictures./gameOver.png")
+		Novice::LoadTexture("./Resources./Pictures./title.png"),//差し替えました
+		Novice::LoadTexture("./Resources./Pictures./background.png"),//差し替えました
+		Novice::LoadTexture("./Resources./Pictures./stage.png"),//差し替えました
+		Novice::LoadTexture("./Resources./Pictures./gameover.png"),
+		Novice::LoadTexture("./Resources./Pictures./title2.png"),//タイトル2追加した
+		Novice::LoadTexture("./Resources./Pictures./gameover2.png")//ゲームオーバー2追加
+
 	};
 	//スコア用の数字
-	int numTexHundle[] =
-	{
-		Novice::LoadTexture("./Resources./Pictures./num_0.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_1.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_2.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_3.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_4.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_5.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_6.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_7.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_8.png"),
-		Novice::LoadTexture("./Resources./Pictures./num_9.png"),
-	};
+	int numberHandle = Novice::LoadTexture("./Resources./Pictures./num.png");
+	int scoreHandle = Novice::LoadTexture("./Resources./Pictures./score.png");
+
+	//隠れ場所
+	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");
+
+	//プレイヤー
+#pragma region //WalkTexturhandle
+
+	//歩くアニメーションのタイマー
+	int walkTimerL = 0;
+	int walkTimerR = 0;
+	//歩く向きのフラグ
+	int walkFlagL = 0;
+	int walkFlagR = 0;
+	//歩くの描画
+	int walkSheetL = Novice::LoadTexture("./Resources./Pictures./walkSheetL.png");
+	int walkSheetR = Novice::LoadTexture("./Resources./Pictures./walkSheetR.png");
+#pragma endregion
+
+#pragma region //runTexturhandle
+	//走るアニメーションのタイマー
+	int runTimerL = 0;
+	int runTimerR = 0;
+	//走る向きのフラグ
+	int runFlagL = 0;
+	int runFlagR = 0;
+	//走るの描画
+	int runSheetL = Novice::LoadTexture("./Resources./Pictures./RunL.png");
+	int runSheetR = Novice::LoadTexture("./Resources./Pictures./RunR.png");
+#pragma endregion
+
+#pragma region //Attack
+	//アタックアニメーションのタイマー
+	int attackTimer = 0;
+	//アタックのフラグ
+	int attackFlag = 0;
+	//アタックの描画
+	int attackSheetL = Novice::LoadTexture("./Resources./Pictures./AttackL.png");
+	int attackSheetR = Novice::LoadTexture("./Resources./Pictures./AttackR.png");
+
+#pragma endregion
+
+#pragma region //Stand by
+	//待機するフラグ
+	int standbyFlagL = 0;
+	int standbyFlagR = 1;
+	//待機の描画
+	int standbyTextureL = Novice::LoadTexture("./Resources./Pictures./standbyL.png");
+	int standbyTextureR = Novice::LoadTexture("./Resources./Pictures./standbyR.png");
+
+#pragma endregion
+
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -253,8 +300,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					sceneTransFlag = 2;
 					scene = TUTORIAL;
+					//タイトルの表示タイマ
+					if (titleTimer < 30)
+					{
+						titleTimer++;
+
+					}
+					else
+					{
+						titleTimer = 0;
+					}
+
+					if (titleTimer2 < 39)
+					{
+						titleTimer2++;
+
+					}
+					else
+					{
+						titleTimer2 = 0;
+					}
 				}
 			}
+
+
 
 			break;
 
@@ -299,19 +368,49 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			player.Velocity.X = 0;
 
 			//ベクトル決め
-			if (keys[DIK_A] || keys[DIK_LEFT])
+			if (keys[DIK_A])
 			{
-				player.Velocity.X = -1;				
+				player.Velocity.X = -1;
+
+				//歩く描画Left
+				standbyFlagL = 1;
+				standbyFlagR = 0;
+				walkFlagL = 1;
+				walkTimerL++;
+				if (walkTimerL > 39)
+				{
+					walkTimerL = 0;
+				}
 			}
-			else if (keys[DIK_D] || keys[DIK_RIGHT])
+			else
+			{
+				walkFlagL = 0;
+				walkTimerL = 0;
+			}
+			if (keys[DIK_D])
 			{
 				player.Velocity.X = 1;
+				//歩く描画Right
+				standbyFlagL = 0;
+				standbyFlagR = 1;
+				walkFlagR = 1;
+				walkTimerR++;
+				if (walkTimerR > 39)
+				{
+					walkTimerR = 0;
+				}
+			}
+			else
+			{
+				walkFlagR = 0;
+				walkTimerR = 0;
 			}
 
 			/*ダッシュの処理(担当：サカイ)*/
 			//ダッシュのトリガー
 			if (keys[DIK_RETURN])
 			{
+
 				runFlag = true;
 			}
 			else
@@ -325,17 +424,42 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				//ダッシュしているときのみ慣性を持たせる
 				if (keys[DIK_A])
 				{
+
+					runFlagL = 1;
+
 					if (runPower >= -6.0f)
 					{
 						runPower -= 0.2f;
 					}
+					runTimerL++;
+					if (runTimerL > 11)
+					{
+						runTimerL = 0;
+					}
 				}
-				else if (keys[DIK_D])
+				else
 				{
+					runFlagL = 0;
+					runTimerL = 0;
+				}
+
+				if (keys[DIK_D])
+				{
+					runFlagR = 1;
 					if (runPower <= 6.0f)
 					{
 						runPower += 0.2f;
 					}
+					runTimerR++;
+					if (runTimerR > 11)
+					{
+						runTimerR = 0;
+					}
+				}
+				else
+				{
+					runFlagR = 0;
+					runTimerR = 0;
 				}
 				//Enterは押しているが左右キーを離した場合は減速する
 				if (!keys[DIK_A])
@@ -385,14 +509,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//ベクトルとスピードを掛け合わせる
-			player.Center.X += (player.Velocity.X * player.Spd) + runPower;
+			if (!attackFlag)
+			{
+
+				player.Center.X += (player.Velocity.X * player.Spd) + runPower;
+			}
 
 			//自機の移動制限
 			if (player.Center.X - player.Rad < 0)
 			{
 				player.Center.X = player.Rad;
 			}
-			else if(player.Center.X + player.Rad > WINDOW_WIDTH)
+			else if (player.Center.X + player.Rad > WINDOW_WIDTH)
 			{
 				player.Center.X = WINDOW_WIDTH - player.Rad;
 			}
@@ -420,7 +548,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
-			
+
+			//動作の処理描画関数，当たり判定とは関係ない
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+			{
+				attackFlag = 1;
+
+			}
+			if (attackFlag == 1)
+			{
+				attackTimer++;
+				if (attackTimer > 23)
+				{
+					attackTimer = 0;
+					attackFlag = 0;
+				}
+			}
+
+
 			/*軽い物の処理(担当：ゾ)*/
 			for (int i = 0; i < remainObj; i++)
 			{
@@ -436,7 +581,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//接触中にスペースキーを押すとオブジェクトを落とす
 							if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 							{
+								attackFlag = 1;
 								obj[i].Hp -= 1;
+
+
 							}
 							//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 							if (runFlag)
@@ -484,7 +632,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							obj[i].ResTimer = 0;
 						}
 					}
-				}				
+				}
 			}
 
 			/*重い物の処理(担当：ゾ)*/
@@ -502,7 +650,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//接触中にスペースキーを押すとヘビーオブジェクトを落とす
 							if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
 							{
-								obj[i].Hp -= 1;
+								attackFlag = 1;
+							}
+							if (attackFlag == 1)
+							{
+								if (attackTimer == 1)
+								{
+									obj[i].Hp -= 1;
+								}
 							}
 							//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 							if (runFlag && !breakFlag[i])
@@ -601,7 +756,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					ownerTimer++;
 				}
-				
+
 				if (safeFlag)
 				{
 					player.Color = RED;
@@ -624,7 +779,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					isOwnerLook = false;
 				}
-				else if(ownerTimer >= 660 && ownerTimer <= 742)
+				else if (ownerTimer >= 660 && ownerTimer <= 742)
 				{
 					isOwnerLook = true;
 				}
@@ -686,18 +841,39 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			break;
 		}
-		
-		/// ↑更新処理ここまで
-		
 
-		
+		/// ↑更新処理ここまで
+
+
+
 		/// ↓描画処理ここから
+
 
 		switch (scene)
 		{
 		case TITLE: //タイトル
 			/*オーディオ関係*/
 			gameoverplay = -1;
+
+			//背景
+			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
+
+			if (titleTimer2 < 10)
+			{
+				Novice::DrawSpriteRect(600, 600, 0, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+			}
+			if (titleTimer2 > 9 && titleTimer2 < 20)
+			{
+				Novice::DrawSpriteRect(600, 600, 128, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+			}
+			if (titleTimer2 > 19 && titleTimer2 < 30)
+			{
+				Novice::DrawSpriteRect(600, 600, 256, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+			}
+			if (titleTimer2 > 29 && titleTimer2 < 40)
+			{
+				Novice::DrawSpriteRect(600, 600, 384, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+			}
 
 			if (Novice::IsPlayingAudio(titleBGMplay) == 0 || titleBGMplay == -1)
 			{
@@ -709,9 +885,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			
 			//
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
-			//遷移用の黒い四角
-			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
-
+			if (titleTimer < 15)
+			{
+				Novice::DrawSprite(600, 400, bgTexHundle[4], 1, 1, 0, WHITE);
+				//遷移用の黒い四角
+				Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
+			}
 			break;
 
 		case TUTORIAL: //チュートリアル			
@@ -747,12 +926,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//背景
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
-			//飼い主
+
+
 			if (ownerTimer <= 650)
 			{
 				Novice::DrawSprite(280, 0, ownerTexHundle[0], 1, 1, 0, WHITE);
 			}
-			else if(ownerTimer > 650)
+			else if (ownerTimer > 650)
 			{
 				Novice::DrawSprite(280, 0, ownerTexHundle[1], 1, 1, 0, WHITE);
 			}
@@ -760,25 +940,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::DrawSprite(0, 600, bgTexHundle[2], 1, 1, 0, WHITE);
 
 			//ブレンドモード変更
-			Novice::SetBlendMode(BlendMode::kBlendModeNormal);			
+			Novice::SetBlendMode(BlendMode::kBlendModeNormal);
 
 			//ブロック(隠れる場所)
 			for (int i = 0; i < bNum; i++)
 			{
-				fLib->DrawSquares(block, i);
+				Novice::DrawSprite((int)(block[i].Center.X - block[i].Rad), (int)(block[i].Center.Y - block[i].Rad), bookHandle, 1, 1, 0.0f, WHITE);
 			}
-			// 自機
-			if (isPAlive)
-			{
-				if (player.Velocity.X <= 0)
-				{
-					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[0], 1, 1, 0, WHITE);
-				}
-				if (player.Velocity.X > 0)
-				{
-					Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[1], 1, 1, 0, WHITE);
-				}
-			}
+#pragma region //object
 			//軽いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
@@ -786,7 +955,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad), int(obj[i].Info.Center.Y - obj[i].Info.Rad), objTexHundle[0], 1, 1, 0, obj[i].Info.Color);
 				}
-			}			
+			}
 			//重いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
@@ -806,52 +975,211 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
+#pragma endregion
+
+#pragma region 			// 自機
+
+
+
+
+			if (isPAlive)
+			{
+				//待機する描画
+				if (!attackFlag)
+				{
+					if (standbyFlagL && !walkFlagL)
+					{
+						Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureL, 1, 1, 0.0f, WHITE);
+					}
+
+					if (standbyFlagR && !walkFlagR)
+					{
+						Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureR, 1, 1, 0.0f, WHITE);
+					}
+				}
+				//アタックする描画
+				if (attackFlag)
+				{
+					if (standbyFlagL == 1) {
+
+						if (attackTimer < 3)
+						{
+							Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureL, 1, 1, 0.0f, WHITE);
+
+						}
+						if (attackTimer < 6 && attackTimer>2)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, attackSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+						}
+						if (attackTimer < 12 && attackTimer>5)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, attackSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+						}
+						if (attackTimer < 18 && attackTimer>11)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, attackSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+						}
+						if (attackTimer < 24 && attackTimer>17)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, attackSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+						}
+					}
+
+					if (standbyFlagR == 1) {
+
+						if (attackTimer < 3)
+						{
+							Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureR, 1, 1, 0.0f, WHITE);
+
+						}
+						if (attackTimer < 6 && attackTimer>2)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+						}
+						if (attackTimer < 12 && attackTimer>5)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+						}
+						if (attackTimer < 18 && attackTimer>11)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+						}
+						if (attackTimer < 24 && attackTimer>17)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+						}
+					}
+
+
+				}
+
+				//歩く描画
+				if (runFlag == false)
+				{
+					if (!attackFlag)
+					{
+
+						if (walkFlagL && !walkFlagR)
+						{
+							if (walkTimerL < 10) {
+
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, walkSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							else  if (walkTimerL < 20 && walkTimerL > 9)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, walkSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							else  if (walkTimerL < 30 && walkTimerL > 19)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, walkSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							else  if (walkTimerL < 40 && walkTimerL > 29)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, walkSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+						}
+						if ((!walkFlagL && walkFlagR) || (walkFlagL && walkFlagR))
+						{
+
+							if (walkTimerR < 10) {
+
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							else  if (walkTimerR < 20 && walkTimerR > 9)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							else  if (walkTimerR < 30 && walkTimerR > 19)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							else  if (walkTimerR < 40 && walkTimerR > 29)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+						}
+					}
+				}
+				//走る描画
+				if (runFlag == true)
+				{
+					if (!attackFlag)
+					{
+						if (runFlagL && !runFlagR)
+						{
+							if (runTimerL < 6)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (runTimerL > 5 && runTimerL < 12)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetL, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							}
+						}
+						if ((runFlagR && !runFlagL) || (runFlagL && runFlagR))
+						{
+							if (runTimerR < 6)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (runTimerR > 5 && runTimerR < 12)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, runSheetR, ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+							}
+						}
+					}
+				}
+			}
+
+#pragma endregion
+
 			//警告の演出
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
 			//隠れる演出
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, hideEffect, kFillModeSolid);
 			//スコア
+			Novice::DrawSprite(1225, 0, scoreHandle, 1, 1, 0, WHITE);
 			for (int i = 0; i < 4; i++)
 			{
 				if (score[i] == 0)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[0], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 0, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 1)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[1], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 32, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 2)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[2], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 64, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 3)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[3], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 96, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 4)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[4], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 128, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 5)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[5], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 160, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 6)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[6], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 192, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 7)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[7], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 224, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 8)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[8], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 256, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 				if (score[i] == 9)
 				{
-					Novice::DrawSprite(1100 + i * 32, 0, numTexHundle[9], 1, 1, 0, WHITE);
+					Novice::DrawSpriteRect(1400 + i * 32, 0, 288, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 				}
 			}
 			//遷移用の黒い四角
@@ -886,7 +1214,58 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
+			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
+
+			Novice::DrawSprite(640, 0, scoreHandle, 1, 1, 0, WHITE);
+			for (int i = 0; i < 4; i++)
+			{
+				if (score[i] == 0)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 0, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 1)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 32, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 2)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 64, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 3)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 96, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 4)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 128, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 5)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 160, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 6)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 192, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 7)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 224, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 8)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 256, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+				if (score[i] == 9)
+				{
+					Novice::DrawSpriteRect(840 + i * 32, 0, 288, 0, 32, 32, numberHandle, ((float)32 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+				}
+			}
+
 			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
+			if (gameOverTimer < 15)
+			{
+				Novice::DrawSprite(0, 0, bgTexHundle[5], 1, 1, 0, WHITE);
+			}
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
 			
