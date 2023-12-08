@@ -702,7 +702,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			if (Novice::IsPlayingAudio(titleBGMplay) == 1)
 			{
 				Novice::StopAudio(titleBGMplay);
-				
+
 			}
 
 			if (Novice::IsPlayingAudio(playBGMplay) == 0 || playBGMplay == -1)
@@ -713,9 +713,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 
 			}
+
+			//se関連
+			//通常攻撃
 			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 			{
-				
+
 				for (int i = 0; i < remainObj; i++)
 				{
 					if (!obj[i].ColFlag)
@@ -740,7 +743,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 
 			}
-			if (runFlag)
+			//走ってる
+			if (runFlag && (keys[DIK_A] || keys[DIK_D]))
 			{
 
 				for (int i = 0; i < remainObj; i++)
@@ -751,25 +755,47 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						{
 
 							//軽いものse
-							if (!obj[i].WeightFlag && !sePlayFlag[1])
+							if (!obj[i].WeightFlag)
 							{
-								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
-								sePlayFlag[1] = true;
+								if (sePlayFlag[1] == false)
+								{
+									glassSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
+									sePlayFlag[1] = true;
+								}
 							}
-							
+							else if (sePlayFlag[1] == true)
+							{
+								sePlayFlag[1] = false;
+								Novice::StopAudio(glassSePlay);
+							}
+
+
+
 
 							//重いものse
-							if (obj[i].WeightFlag&& !sePlayFlag[2])
+							if (obj[i].WeightFlag)
 							{
-								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
-								sePlayFlag[1] = true;
+								if (sePlayFlag[2] == false)
+								{
+
+									bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
+									sePlayFlag[2] = true;
+								}
 							}
+							else if (sePlayFlag[2] == true)
+							{
+								sePlayFlag[2] = false;
+								Novice::StopAudio(bottleSePlay);
+							}
+
+
 
 						}
 					}
 				}
 
 			}
+
 
 
 			//ゲームオーバー条件
