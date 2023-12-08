@@ -157,6 +157,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int titleTimer = 0;
 	int titleTimer2 = 0;
 
+	//ゲームオーバーに関するタイマー
+	int gameOverTimer = 0;
 	//飼い主
 	int ownerTexHundle[] =
 	{
@@ -186,7 +188,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int scoreHandle = Novice::LoadTexture("./Resources./Pictures./score.png");
 
 	//隠れ場所
-	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");	
+	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");
 
 	//待機の描画
 	int standbyTextureL = Novice::LoadTexture("./Resources./Pictures./standbyL.png");
@@ -218,6 +220,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (sceneTransFlag == 0)
 			{
+				if (titleTimer < 30)
+				{
+					titleTimer++;
+
+				}
+				else
+				{
+					titleTimer = 0;
+				}
+
+				if (titleTimer2 < 39)
+				{
+					titleTimer2++;
+
+				}
+				else
+				{
+					titleTimer2 = 0;
+				}
 				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 				{
 					/*初期化*/
@@ -250,34 +271,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					//不具合が起きるため下の描画処理に有り
 				}
 			}
-			
+
 
 			if (sceneTransFlag == 1)
 			{
+
 				if (fLib->SceneEnd(sceneTrans.Color))
 				{
 					sceneTransFlag = 2;
 					scene = TUTORIAL;
 					//タイトルの表示タイマ
-					if (titleTimer < 30)
-					{
-						titleTimer++;
 
-					}
-					else
-					{
-						titleTimer = 0;
-					}
-
-					if (titleTimer2 < 39)
-					{
-						titleTimer2++;
-
-					}
-					else
-					{
-						titleTimer2 = 0;
-					}
 				}
 			}
 
@@ -788,6 +792,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			//遷移処理はここで記述すると
 			//不具合が起きるため下の描画処理に有り			
+			//ゲームオーバーに関するタイマー
+			if (gameOverTimer < 30)
+			{
+				gameOverTimer++;
+			}
+			else
+			{
+				gameOverTimer = 0;
+			}
 
 			break;
 		}
@@ -810,19 +823,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (titleTimer2 < 10)
 			{
-				Novice::DrawSpriteRect(600, 600, 0, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+				Novice::DrawSpriteRect(600, 592, 0, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 			}
 			if (titleTimer2 > 9 && titleTimer2 < 20)
 			{
-				Novice::DrawSpriteRect(600, 600, 128, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+				Novice::DrawSpriteRect(600, 592, 128, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 			}
 			if (titleTimer2 > 19 && titleTimer2 < 30)
 			{
-				Novice::DrawSpriteRect(600, 600, 256, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+				Novice::DrawSpriteRect(600, 592, 256, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 			}
 			if (titleTimer2 > 29 && titleTimer2 < 40)
 			{
-				Novice::DrawSpriteRect(600, 600, 384, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+				Novice::DrawSpriteRect(600, 592, 384, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 			}
 
 			if (Novice::IsPlayingAudio(titleBGMplay) == 0 || titleBGMplay == -1)
@@ -832,7 +845,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					titleBGMplay = Novice::PlayAudio(audioHundle[0], 1, 0.3f);
 				}
 			}
-			
+
 			//
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
 			if (titleTimer < 15)
@@ -844,11 +857,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 
 		case TUTORIAL: //チュートリアル			
-			
+
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
-			
-			Novice::ScreenPrintf(0, 0, "flag = %d",sceneTransFlag);
+
+			Novice::ScreenPrintf(0, 0, "flag = %d", sceneTransFlag);
 
 			break;
 
@@ -1134,6 +1147,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					gameoverplay = Novice::PlayAudio(audioHundle[3], 0, 0.5);
 				}
 			}
+
 			//遷移
 			if (sceneTransFlag == 0)
 			{
@@ -1153,7 +1167,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
-
+			if (gameOverTimer < 15)
+			{
+				Novice::DrawSprite(0, 0, bgTexHundle[5], 1, 1, 0, WHITE);
+			}
 			Novice::DrawSprite(640, 0, scoreHandle, 1, 1, 0, WHITE);
 			for (int i = 0; i < 4; i++)
 			{
@@ -1202,7 +1219,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
-			
+
 			break;
 		}
 
