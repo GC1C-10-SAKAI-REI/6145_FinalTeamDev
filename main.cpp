@@ -149,10 +149,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//タイトルに関するタイマー
 	int titleTimer = 0;
 	int titleTimer2 = 0;
-	//ゲームオーバーに関するタイマー＆＆フラグ
-	int gameOverTimer = 0;
-	int gameOverFlag = 0;
-	int gameOverFlagTimer = 0;
 
 	//飼い主
 	int ownerTexHundle[] =
@@ -1262,10 +1258,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
-			if (gameOverTimer < 15)
-			{
-				Novice::DrawSprite(0, 0, bgTexHundle[5], 1, 1, 0, WHITE);
-			}
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
 			
