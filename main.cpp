@@ -29,11 +29,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//自機
 	Object player =
 	{
-		{800,580},
-		{0,0},
-		64,
-		6,
-		BLACK
+		{800,580},{0,0},64,6,BLACK
 	};
 	//true：生きてる false：死んでる
 	bool isPAlive = true;
@@ -43,6 +39,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	float runPower = 0.0f;
 	//プレイヤーが隠れた時のエフェクト
 	unsigned int hideEffect = 0x69696900;
+	//歩くアニメーションのタイマー
+	int walkTimerL = 0;
+	int walkTimerR = 0;
+	//歩く向きのフラグ
+	int walkFlagL = 0;
+	int walkFlagR = 0;
+	//歩くの描画
+	int walkSheetL = Novice::LoadTexture("./Resources./Pictures./walkSheetL.png");
+	int walkSheetR = Novice::LoadTexture("./Resources./Pictures./walkSheetR.png");
+
+	//走るアニメーションのタイマー
+	int runTimerL = 0;
+	int runTimerR = 0;
+	//走る向きのフラグ
+	int runFlagL = 0;
+	int runFlagR = 0;
+	//走るの描画
+	int runSheetL = Novice::LoadTexture("./Resources./Pictures./RunL.png");
+	int runSheetR = Novice::LoadTexture("./Resources./Pictures./RunR.png");
+
+	//アタックアニメーションのタイマー
+	int attackTimer = 0;
+	//アタックのフラグ
+	int attackFlag = 0;
+	//アタックの描画
+	int attackSheetL = Novice::LoadTexture("./Resources./Pictures./AttackL.png");
+	int attackSheetR = Novice::LoadTexture("./Resources./Pictures./AttackR.png");
+
+	//待機するフラグ
+	int standbyFlagL = 0;
+	int standbyFlagR = 1;
 
 	/*プレイヤーが落とすオブジェクト*/
 	const int remainObj = 5;
@@ -51,18 +78,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		obj[i] =
 		{
-			{
-				{float(290 + (256 * i)),580},
-				{0,0},
-				64,
-				0,
-				WHITE
-			},
-			false,
-			true,
-			0,
-			false,
-			1
+			{{float(290 + (256 * i)),580},{0,0},64,0,WHITE},false,true,0,false,1
 		};
 	}
 	//連続で当たり判定を発生させないようにするフラグ
@@ -92,11 +108,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		block[i] =
 		{
-			{0,540},
-			{0,0},
-			96,
-			0,
-			WHITE
+			{0,540},{0,0},96,0,WHITE
 		};
 	}
 	block[0].Center.X = block[0].Rad + 32;
@@ -119,11 +131,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	Object sceneTrans =
 	{
-		{0,0},
-		{0,0},
-		0,
-		0,
-		0x00000000
+		{0,0},{0,0},0,0,0x00000000
 	};
 	int sceneTransFlag = 0;
 
@@ -142,7 +150,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int gameoverplay = -1;
 
 	int score[4] = { 0 };
-
 
 	/*リソース関連*/
 
@@ -180,55 +187,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int scoreHandle = Novice::LoadTexture("./Resources./Pictures./score.png");
 
 	//隠れ場所
-	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");
+	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");	
 
-	//プレイヤー
-#pragma region //WalkTexturhandle
-
-	//歩くアニメーションのタイマー
-	int walkTimerL = 0;
-	int walkTimerR = 0;
-	//歩く向きのフラグ
-	int walkFlagL = 0;
-	int walkFlagR = 0;
-	//歩くの描画
-	int walkSheetL = Novice::LoadTexture("./Resources./Pictures./walkSheetL.png");
-	int walkSheetR = Novice::LoadTexture("./Resources./Pictures./walkSheetR.png");
-#pragma endregion
-
-#pragma region //runTexturhandle
-	//走るアニメーションのタイマー
-	int runTimerL = 0;
-	int runTimerR = 0;
-	//走る向きのフラグ
-	int runFlagL = 0;
-	int runFlagR = 0;
-	//走るの描画
-	int runSheetL = Novice::LoadTexture("./Resources./Pictures./RunL.png");
-	int runSheetR = Novice::LoadTexture("./Resources./Pictures./RunR.png");
-#pragma endregion
-
-#pragma region //Attack
-	//アタックアニメーションのタイマー
-	int attackTimer = 0;
-	//アタックのフラグ
-	int attackFlag = 0;
-	//アタックの描画
-	int attackSheetL = Novice::LoadTexture("./Resources./Pictures./AttackL.png");
-	int attackSheetR = Novice::LoadTexture("./Resources./Pictures./AttackR.png");
-
-#pragma endregion
-
-#pragma region //Stand by
-	//待機するフラグ
-	int standbyFlagL = 0;
-	int standbyFlagR = 1;
 	//待機の描画
 	int standbyTextureL = Novice::LoadTexture("./Resources./Pictures./standbyL.png");
 	int standbyTextureR = Novice::LoadTexture("./Resources./Pictures./standbyR.png");
-
-#pragma endregion
-
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -318,8 +281,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
-
-
 
 			break;
 
@@ -831,9 +792,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		case GAMEOVER: //ゲームオーバー
 
 			//遷移処理はここで記述すると
-			//不具合が起きるため下の描画処理に有り
-
-			
+			//不具合が起きるため下の描画処理に有り			
 
 			break;
 		}
@@ -943,7 +902,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			{
 				Novice::DrawSprite((int)(block[i].Center.X - block[i].Rad), (int)(block[i].Center.Y - block[i].Rad), bookHandle, 1, 1, 0.0f, WHITE);
 			}
-#pragma region //object
+
 			//軽いオブジェクト
 			for (int i = 0; i < remainObj; i++)
 			{
@@ -971,12 +930,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
-#pragma endregion
-
-#pragma region 			// 自機
-
-
-
 
 			if (isPAlive)
 			{
@@ -996,8 +949,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				//アタックする描画
 				if (attackFlag)
 				{
-					if (standbyFlagL == 1) {
-
+					if (standbyFlagL == 1)
+					{
 						if (attackTimer < 3)
 						{
 							Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureL, 1, 1, 0.0f, WHITE);
@@ -1021,8 +974,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						}
 					}
 
-					if (standbyFlagR == 1) {
-
+					if (standbyFlagR == 1)
+					{
 						if (attackTimer < 3)
 						{
 							Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), standbyTextureR, 1, 1, 0.0f, WHITE);
@@ -1045,8 +998,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, attackSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 						}
 					}
-
-
 				}
 
 				//歩く描画
@@ -1054,11 +1005,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					if (!attackFlag)
 					{
-
 						if (walkFlagL && !walkFlagR)
 						{
-							if (walkTimerL < 10) {
-
+							if (walkTimerL < 10)
+							{
 								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, walkSheetL, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 							}
 							else  if (walkTimerL < 20 && walkTimerL > 9)
@@ -1076,9 +1026,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						}
 						if ((!walkFlagL && walkFlagR) || (walkFlagL && walkFlagR))
 						{
-
-							if (walkTimerR < 10) {
-
+							if (walkTimerR < 10)
+							{
 								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 							}
 							else  if (walkTimerR < 20 && walkTimerR > 9)
@@ -1126,8 +1075,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 				}
 			}
-
-#pragma endregion
 
 			//警告の演出
 			Novice::DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, ownerEffect, kFillModeSolid);
