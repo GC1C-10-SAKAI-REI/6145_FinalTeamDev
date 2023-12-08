@@ -218,6 +218,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (sceneTransFlag == 0)
 			{
+				if (titleTimer < 30)
+				{
+					titleTimer++;
+
+				}
+				else
+				{
+					titleTimer = 0;
+				}
+
+				if (titleTimer2 < 39)
+				{
+					titleTimer2++;
+
+				}
+				else
+				{
+					titleTimer2 = 0;
+				}
 				if (keys[DIK_RETURN] && !preKeys[DIK_RETURN])
 				{
 					/*初期化*/
@@ -254,30 +273,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (sceneTransFlag == 1)
 			{
+
 				if (fLib->SceneEnd(sceneTrans.Color))
 				{
 					sceneTransFlag = 2;
 					scene = TUTORIAL;
 					//タイトルの表示タイマ
-					if (titleTimer < 30)
-					{
-						titleTimer++;
-
-					}
-					else
-					{
-						titleTimer = 0;
-					}
-
-					if (titleTimer2 < 39)
-					{
-						titleTimer2++;
-
-					}
-					else
-					{
-						titleTimer2 = 0;
-					}
+					
 				}
 			}
 
@@ -810,19 +812,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			if (titleTimer2 < 10)
 			{
-				Novice::DrawSpriteRect(600, 600, 0, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+				Novice::DrawSpriteRect(600, 592, 0, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 			}
 			if (titleTimer2 > 9 && titleTimer2 < 20)
 			{
-				Novice::DrawSpriteRect(600, 600, 128, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+				Novice::DrawSpriteRect(600, 592, 128, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 			}
 			if (titleTimer2 > 19 && titleTimer2 < 30)
 			{
-				Novice::DrawSpriteRect(600, 600, 256, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+				Novice::DrawSpriteRect(600, 592, 256, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 			}
 			if (titleTimer2 > 29 && titleTimer2 < 40)
 			{
-				Novice::DrawSpriteRect(600, 600, 384, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+				Novice::DrawSpriteRect(600, 592, 384, 0, 128, 128, walkSheetR, ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
 			}
 
 			if (Novice::IsPlayingAudio(titleBGMplay) == 0 || titleBGMplay == -1)
