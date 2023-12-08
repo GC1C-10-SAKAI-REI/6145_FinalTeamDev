@@ -25,7 +25,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	srand(currentTime);
 	//抽選の為の変数
 	int number[5] = { 0 };
-
+	//シェイクの変数
+	int randX[5];
+	int randY[5];
+	bool shakeFlag[5];
+	int frame[5];
+	int shake[5];
+	for (int i = 0; i < 5; i++)
+	{
+		randX[i] = rand();
+		randY[i] = rand();
+		shakeFlag[i] = false;
+		frame[i] = 30;
+		shake[i] = 17;
+	}
 	//自機
 	Object player =
 	{
@@ -607,9 +620,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
 							{
 								attackFlag = 1;
+								shakeFlag[i] = true;
+								shake[i] = 17;
+								frame[i] = 30;
 							}
 							if (attackFlag == 1)
 							{
+								if (shakeFlag[i] == true)
+								{
+
+								}
 								if (attackTimer == 1)
 								{
 									obj[i].Hp -= 1;
