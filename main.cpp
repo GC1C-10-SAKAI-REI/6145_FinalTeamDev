@@ -205,7 +205,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int scoreHandle = Novice::LoadTexture("./Resources./Pictures./score.png");
 
 	//隠れ場所
-	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");	
+	int bookHandle = Novice::LoadTexture("./Resources./Pictures./book.png");
 
 	//待機の描画
 	int standbyTextureL = Novice::LoadTexture("./Resources./Pictures./standbyL.png");
@@ -288,7 +288,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					//不具合が起きるため下の描画処理に有り
 				}
 			}
-			
+
 
 			if (sceneTransFlag == 1)
 			{
@@ -298,7 +298,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					sceneTransFlag = 2;
 					scene = TUTORIAL;
 					//タイトルの表示タイマ
-					
+
 				}
 			}
 
@@ -861,9 +861,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					titleBGMplay = Novice::PlayAudio(audioHundle[0], 1, 0.3f);
 				}
-				
+
 			}
-			
+
 			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
 			{
 				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
@@ -879,11 +879,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 
 		case TUTORIAL: //チュートリアル			
-			
+
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
-			
-			Novice::ScreenPrintf(0, 0, "flag = %d",sceneTransFlag);
+
+			Novice::ScreenPrintf(0, 0, "flag = %d", sceneTransFlag);
 
 			break;
 
@@ -900,41 +900,46 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					playBGMplay = Novice::PlayAudio(audioHundle[1], 1, 0.5);
 				}
 			}
-			
+
 
 			//se関連
-			//通常攻撃
-			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+
+
+			for (int i = 0; i < remainObj; i++)
 			{
-
-				for (int i = 0; i < remainObj; i++)
+				if (obj[i].ResTimer== 50)
 				{
-					if (!obj[i].ColFlag)
-					{
-						if (!obj[i].IsAlive)
-						{
+					if (obj[i].ColFlag == false)
 
+					{
+						if (obj[i].WeightFlag == false)
+						{
 							//軽いものse
-							if (!obj[i].WeightFlag)
+
+							if (Novice::IsPlayingAudio(sePlayFlag[1]) == false)
 							{
 								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
-							}
+								sePlayFlag[1] = true;
 
-							//重いものse
-							else if (obj[i].WeightFlag)
+							}
+						}
+						else if (obj[i].WeightFlag == true)
+						{
+							//重い物se
+
+							if (Novice::IsPlayingAudio(sePlayFlag[2]) == false)
 							{
 								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
+								sePlayFlag[2] = true;
 							}
 
 						}
 					}
 				}
 			}
-			else
-			{
-				glassSePlay = -1;
-				bottleSePlay = -1;
-			}
+
+
+
 
 
 			//ゲームオーバーへの遷移
@@ -945,9 +950,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
 
-				catSePlay = -1;
-				glassSePlay = -1;
-				bottleSePlay = -1;
+
 
 				scene = GAMEOVER;
 			}
@@ -1212,7 +1215,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					gameoverplay = Novice::PlayAudio(audioHundle[3], 0, 0.5);
 				}
 			}
-			
+
 			//遷移
 			if (sceneTransFlag == 0)
 			{
@@ -1284,7 +1287,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
-			
+
 			break;
 		}
 
