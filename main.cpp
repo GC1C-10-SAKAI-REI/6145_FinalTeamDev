@@ -25,7 +25,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	srand(currentTime);
 	//抽選の為の変数
 	int number[5] = { 0 };
-
+	//シェイクの変数
+	int randX[5];
+	int randY[5];
+	bool shakeFlag[5];
+	int frame[5];
+	int shake[5];
+	for (int i = 0; i < 5; i++)
+	{
+		randX[i] = rand();
+		randY[i] = rand();
+		shakeFlag[i] = false;
+		frame[i] = 30;
+		shake[i] = 17;
+	}
 	//自機
 	Object player =
 	{
@@ -208,7 +221,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		switch (scene)
 		{
 		case TITLE: //タイトル
-
+			//デバック用
+			//if(keys[DIK_S] && preKeys[DIK_S] == 0)
+			//{
+			//	scene = GAMEPLAY;
+			//}
 			if (sceneTransFlag == 2)
 			{
 				if (fLib->SceneStart(sceneTrans.Color))
@@ -602,10 +619,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//接触中にスペースキーを押すとヘビーオブジェクトを落とす
 							if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
 							{
-								attackFlag = true;
+								attackFlag = 1;
+								shakeFlag[i] = true;
+								shake[i] = 17;
+								frame[i] = 30;
 							}
 							if (attackFlag)
 							{
+								if (shakeFlag[i] == true)
+								{
+									frame[i] = 30;
+									shake[i] = 21;
+									randX[i] = rand() % shake[i] - (shake[i] / 2);
+									randY[i] = rand() % shake[i] - (shake[i] / 2);
+									frame[i]--;
+									if (frame[i] % 3 == 0)
+									{
+										shake[i]--;
+									}
+								}
+								if (shake[i] < 1)
+								{
+									shake[i] = 1;
+									shakeFlag[i] = false;
+									if (shakeFlag[i] == false)
+									{
+										obj[i].Hp -= 1;
+									}
+								}
 								if (attackTimer == 1)
 								{
 									obj[i].Hp -= 1;
@@ -614,7 +655,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//ダッシュ中にオブジェクトと接触したらオブジェクトが落ちる
 							if (runFlag && !breakFlag[i])
 							{
-								obj[i].Hp -= 1;
+								attackFlag = 1;
+								shakeFlag[i] = true;
+								shake[i] = 17;
+								frame[i] = 30;
+
+								if (shakeFlag[i] == true)
+								{
+									frame[i] = 30;
+									shake[i] = 21;
+									randX[i] = rand() % shake[i] - (shake[i] / 2);
+									randY[i] = rand() % shake[i] - (shake[i] / 2);
+									frame[i]--;
+									if (frame[i] % 3 == 0)
+									{
+										shake[i]--;
+									}
+								}
+								if (shake[i] < 1)
+								{
+									shake[i] = 1;
+									shakeFlag[i] = false;
+									if (shakeFlag[i] == false)
+									{
+										obj[i].Hp -= 1;
+									}
+								}
+								//obj[i].Hp -= 1;
 								//break;
 							}
 							breakFlag[i] = true;
@@ -718,6 +785,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					//プレイヤーの死亡処理
 					isPAlive = false;
 				}
+				//デバック用
+				//if (keys[DIK_J] && preKeys[DIK_J] == 0)
+				//{
+				//	isPAlive = false;
+				//}
 				//ownerTimerが660となっているがサカイのPCが165fpsであるため
 				//165*4(つまりサカイのPC上で3秒)で660となっている。
 				//皆のPCが60fpsなら240に値を修正しといてくれ
@@ -942,11 +1014,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					}
 					else if (obj[i].Hp == 2)
 					{
-						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[2], 1, 1, 0, obj[i].Info.Color);
+						Novice::DrawSprite(int(obj[i].Info.Center.X + randX[i] - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y + randY[i] - obj[i].Info.Rad * 2), objTexHundle[2], 1, 1, 0, obj[i].Info.Color);
 					}
 					else if (obj[i].Hp <= 1)
 					{
-						Novice::DrawSprite(int(obj[i].Info.Center.X - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y - obj[i].Info.Rad * 2), objTexHundle[3], 1, 1, 0, obj[i].Info.Color);
+						Novice::DrawSprite(int(obj[i].Info.Center.X + randX[i] - obj[i].Info.Rad * 2), int(obj[i].Info.Center.Y + randY[i] - obj[i].Info.Rad * 2), objTexHundle[3], 1, 1, 0, obj[i].Info.Color);
 					}
 				}
 			}
