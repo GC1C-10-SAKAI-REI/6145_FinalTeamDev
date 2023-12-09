@@ -117,39 +117,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	};
 	//switch用変数
 	Scene scene = TITLE;
-	int tutorialScene = 0;
-
-	/*音楽*/
-	const int audio = 20;
-	int audioHundle[audio] =
-	{
-		Novice::LoadAudio("./Resources./Audio./Title.mp3"),//0
-		Novice::LoadAudio("./Resources./Audio./GamePlay1.mp3"),//1
-		Novice::LoadAudio("./Resources./Audio./GamePlay2.mp3"),//2
-		Novice::LoadAudio("./Resources./Audio./GameOver.mp3"),//3
-	};
-
-	int titleBGMplay = -1;
-	int playBGMplay = -1;
-	int gameoverplay = -1;
-
-	/*se*/
-	const int se = 20;
-	int seHundle[se] =
-	{
-		Novice::LoadAudio("./Resources./Audio./Cat.mp3"),    //猫の音
-		Novice::LoadAudio("./Resources./Audio./Glass.mp3"),	 //グラスが割れた
-		Novice::LoadAudio("./Resources./Audio./Bottle.mp3")  //瓶が割れた
-	};
-
-	int catSePlay = -1;
-	int glassSePlay = -1;
-	int bottleSePlay = -1;
-
-	bool sePlayFlag[3] = { false,false,false };
+	int tutorialScene = 0;	
 	//score変数
 	int score[4] = { 0 };
-
 
 	/*リソース関連*/
 	//プレイヤー
@@ -194,6 +164,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Novice::LoadTexture("./Resources./Pictures./num_8.png"),
 		Novice::LoadTexture("./Resources./Pictures./num_9.png"),
 	};
+
+	/*音楽*/
+	//BGM
+	const int audio = 20;
+	int audioHundle[audio] =
+	{
+		Novice::LoadAudio("./Resources./Audio./Title.mp3"),//0
+		Novice::LoadAudio("./Resources./Audio./GamePlay1.mp3"),//1
+		Novice::LoadAudio("./Resources./Audio./GamePlay2.mp3"),//2
+		Novice::LoadAudio("./Resources./Audio./GameOver.mp3"),//3
+	};
+	int titleBGMplay = -1;
+	int playBGMplay = -1;
+	int gameoverplay = -1;
+
+	//SE
+	const int se = 20;
+	int seHundle[se] =
+	{
+		Novice::LoadAudio("./Resources./Audio./Cat.mp3"),    //猫の音
+		Novice::LoadAudio("./Resources./Audio./Glass.mp3"),	 //グラスが割れた
+		Novice::LoadAudio("./Resources./Audio./Bottle.mp3")  //瓶が割れた
+	};
+	int catSePlay = -1;
+	int glassSePlay = -1;
+	int bottleSePlay = -1;
+	bool sePlayFlag[3] = { false,false,false };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
