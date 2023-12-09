@@ -907,30 +907,27 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			for (int i = 0; i < remainObj; i++)
 			{
+				//リスボンが始まって一定の時点で
 				if (obj[i].ResTimer== 50)
 				{
+					//フラグがフォルスなったな
 					if (obj[i].ColFlag == false)
-
 					{
+						//重さを判定する
 						if (obj[i].WeightFlag == false)
 						{
-							//軽いものse
-
+							//軽い物se
 							if (Novice::IsPlayingAudio(sePlayFlag[1]) == false)
 							{
 								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
-								sePlayFlag[1] = true;
-
 							}
 						}
 						else if (obj[i].WeightFlag == true)
 						{
 							//重い物se
-
 							if (Novice::IsPlayingAudio(sePlayFlag[2]) == false)
 							{
 								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
-								sePlayFlag[2] = true;
 							}
 
 						}
