@@ -617,7 +617,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						if (obj[i].ColFlag)
 						{
 							//接触中にスペースキーを押すとヘビーオブジェクトを落とす
-							if (keys[DIK_SPACE] && preKeys[DIK_SPACE] == 0)
+							if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
 							{
 								attackFlag = 1;
 								shakeFlag[i] = true;
@@ -660,7 +660,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 								shake[i] = 17;
 								frame[i] = 30;
 
-								if (shakeFlag[i] == true)
+								if (shakeFlag[i])
 								{
 									frame[i] = 30;
 									shake[i] = 21;
@@ -676,7 +676,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 								{
 									shake[i] = 1;
 									shakeFlag[i] = false;
-									if (shakeFlag[i] == false)
+									if (!shakeFlag[i])
 									{
 										obj[i].Hp -= 1;
 									}
@@ -783,13 +783,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				else if (!safeFlag && isOwnerLook)
 				{
 					//プレイヤーの死亡処理
-					isPAlive = false;
+					//isPAlive = false;
 				}
-				//デバック用
-				//if (keys[DIK_J] && preKeys[DIK_J] == 0)
-				//{
-				//	isPAlive = false;
-				//}
 				//ownerTimerが660となっているがサカイのPCが165fpsであるため
 				//165*4(つまりサカイのPC上で3秒)で660となっている。
 				//皆のPCが60fpsなら240に値を修正しといてくれ
