@@ -737,7 +737,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				else if (!safeFlag && isOwnerLook)
 				{
 					//プレイヤーの死亡処理
-					isPAlive = false;
+					/*isPAlive = false;*/
 				}
 				//ownerTimerが660となっているがサカイのPCが165fpsであるため
 				//165*4(つまりサカイのPC上で3秒)で660となっている。
@@ -907,14 +907,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 			for (int i = 0; i < remainObj; i++)
 			{
-				//リスボンが始まって一定の時点で
-				if (obj[i].ResTimer== 50)
+
+				//フラグがフォルスなったな
+				if (obj[i].ColFlag == false)
 				{
-					//フラグがフォルスなったな
-					if (obj[i].ColFlag == false)
-					{
+					//リスボンが始まって一定の時点で
+					if (obj[i].ResTimer == 1)
 						//重さを判定する
+					{
 						if (obj[i].WeightFlag == false)
+
 						{
 							//軽い物se
 							if (Novice::IsPlayingAudio(sePlayFlag[1]) == false)
@@ -924,11 +926,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						}
 						else if (obj[i].WeightFlag == true)
 						{
-							//重い物se
+							//リスボンが始まって一定の時点で
+
+								//重い物se
 							if (Novice::IsPlayingAudio(sePlayFlag[2]) == false)
 							{
 								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
 							}
+
 
 						}
 					}
