@@ -951,14 +951,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				{
 					titleBGMplay = Novice::PlayAudio(audioHundle[0], 1, 0.3f);
 				}
-
-				if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
-				{
-					catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
-				}
-
 			}
 
+			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
+			{
+				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
+			}
 
 			break;
 
@@ -997,7 +995,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//軽い物se
 							if (Novice::IsPlayingAudio(sePlayFlag[1]) == false)
 							{
-								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 0.6f);
+								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 1.0f);
 							}
 						}
 						else if (obj[i].WeightFlag == true)
@@ -1005,7 +1003,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							//重い物se
 							if (Novice::IsPlayingAudio(sePlayFlag[2]) == false)
 							{
-								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 0.6f);
+								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 1.0f);
 							}
 
 
