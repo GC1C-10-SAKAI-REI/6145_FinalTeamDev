@@ -494,7 +494,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//ベクトルとスピードを掛け合わせる
-			if (!attackFlag || runFlag )
+			if (!attackFlag || runFlag)
 			{
 				player.Center.X += (player.Velocity.X * player.Spd) + runPower;
 			}
@@ -1127,82 +1127,84 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				//走る描画
 				if (runFlag == true)
 				{
-					if (!attackFlag)
+
+					if (runFlagL && !runFlagR)
 					{
-						if (runFlagL && !runFlagR)
+						if (runTimerL < 6)
 						{
-							if (runTimerL < 6)
-							{
-								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, playerTexHundle[4], ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
-							}
-							if (runTimerL > 5 && runTimerL < 12)
-							{
-								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, playerTexHundle[4], ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
-							}
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, playerTexHundle[4], ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 						}
-						if ((runFlagR && !runFlagL) || (runFlagL && runFlagR))
+						if (runTimerL > 5 && runTimerL < 12)
 						{
-							if (runTimerR < 6)
-							{
-								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, playerTexHundle[5], ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
-							}
-							if (runTimerR > 5 && runTimerR < 12)
-							{
-								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, playerTexHundle[5], ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
-							}
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, playerTexHundle[4], ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
 						}
 					}
+					if ((runFlagR && !runFlagL) || (runFlagL && runFlagR))
+					{
+						if (runTimerR < 6)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 160, 128, playerTexHundle[5], ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+						}
+						if (runTimerR > 5 && runTimerR < 12)
+						{
+							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 160, 0, 160, 128, playerTexHundle[5], ((float)160 / (float)320), 1, 0.0f, 0xFFFFFFFF);
+						}
+					}
+
 				}
 				//アタックする描画
 				if (attackFlag)
 				{
-					if (idleFlagL)
+					if (!runFlag)
 					{
-						if (attackTimer < 3)
+						if (idleFlagL || walkFlagL)
 						{
-							Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[0], 1, 1, 0.0f, WHITE);
+							if (attackTimer < 3)
+							{
+								Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[0], 1, 1, 0.0f, WHITE);
 
+							}
+							if (attackTimer < 6 && attackTimer>2)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, playerTexHundle[6], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (attackTimer < 12 && attackTimer>5)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, playerTexHundle[6], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (attackTimer < 18 && attackTimer>11)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, playerTexHundle[6], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (attackTimer < 24 && attackTimer>17)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, playerTexHundle[6], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
 						}
-						if (attackTimer < 6 && attackTimer>2)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, playerTexHundle[6], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
-						}
-						if (attackTimer < 12 && attackTimer>5)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, playerTexHundle[6], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
-						}
-						if (attackTimer < 18 && attackTimer>11)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, playerTexHundle[6], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
-						}
-						if (attackTimer < 24 && attackTimer>17)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, playerTexHundle[6], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
-						}
-					}
 
-					if (idleFlagR)
-					{
-						if (attackTimer < 3)
+						if (idleFlagR || walkFlagR)
 						{
-							Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[1], 1, 1, 0.0f, WHITE);
+							if (attackTimer < 3)
+							{
+								Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[1], 1, 1, 0.0f, WHITE);
 
-						}
-						if (attackTimer < 6 && attackTimer>2)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, playerTexHundle[7], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
-						}
-						if (attackTimer < 12 && attackTimer>5)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, playerTexHundle[7], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
-						}
-						if (attackTimer < 18 && attackTimer>11)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, playerTexHundle[7], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
-						}
-						if (attackTimer < 24 && attackTimer>17)
-						{
-							Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, playerTexHundle[7], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (attackTimer < 6 && attackTimer>2)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 0, 0, 128, 128, playerTexHundle[7], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (attackTimer < 12 && attackTimer>5)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 128, 0, 128, 128, playerTexHundle[7], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (attackTimer < 18 && attackTimer>11)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 256, 0, 128, 128, playerTexHundle[7], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
+							if (attackTimer < 24 && attackTimer>17)
+							{
+								Novice::DrawSpriteRect(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), 384, 0, 128, 128, playerTexHundle[7], ((float)128 / (float)512), 1, 0.0f, 0xFFFFFFFF);
+							}
 						}
 					}
 				}
