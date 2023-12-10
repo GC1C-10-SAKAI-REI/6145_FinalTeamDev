@@ -184,7 +184,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Novice::LoadTexture("./Resources./Pictures./stage.png"),
 		Novice::LoadTexture("./Resources./Pictures./gameover.png"),
 		Novice::LoadTexture("./Resources./Pictures./title2.png"),
-		Novice::LoadTexture("./Resources./Pictures./gameover2.png")
+		Novice::LoadTexture("./Resources./Pictures./gameover2.png"),
+		Novice::LoadTexture("./Resources./Pictures./tutorial.png")
 	};
 	//スコア用の数字
 	int numberHandle = Novice::LoadTexture("./Resources./Pictures./num.png");
@@ -954,6 +955,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		case TUTORIAL: //チュートリアル			
 
+			Novice::DrawSprite(0, 0, bgTexHundle[6], 1, 1, 0, WHITE);
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
 
