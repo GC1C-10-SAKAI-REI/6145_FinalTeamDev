@@ -222,10 +222,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE: //タイトル
 			//デバック用
-			//if(keys[DIK_S] && preKeys[DIK_S] == 0)
-			//{
-			//	scene = GAMEPLAY;
-			//}
+			if(keys[DIK_S] && preKeys[DIK_S] == 0)
+			{
+				scene = GAMEPLAY;
+			}
 			if (sceneTransFlag == 2)
 			{
 				if (fLib->SceneStart(sceneTrans.Color))
@@ -523,10 +523,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//動作の処理描画関数，当たり判定とは関係ない
-			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
-			{
-				attackFlag = true;
-			}
+			//if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+			//{
+			//	attackFlag = true;
+			//}
 			if (attackFlag)
 			{
 				attackTimer++;
@@ -642,10 +642,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 								{
 									shake[i] = 1;
 									shakeFlag[i] = false;
-									if (shakeFlag[i] == false)
-									{
-										obj[i].Hp -= 1;
-									}
+									//if (shakeFlag[i] == false)
+									//{
+									//	obj[i].Hp -= 1;
+									//}
 								}
 								if (attackTimer == 1)
 								{
@@ -659,8 +659,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 								shakeFlag[i] = true;
 								shake[i] = 17;
 								frame[i] = 30;
-
-								if (shakeFlag[i])
+								//obj[i].Hp -= 1;
+								if (shakeFlag[i] == true)
 								{
 									frame[i] = 30;
 									shake[i] = 21;
@@ -676,10 +676,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 								{
 									shake[i] = 1;
 									shakeFlag[i] = false;
-									if (!shakeFlag[i])
-									{
-										obj[i].Hp -= 1;
-									}
+									//if (!shakeFlag[i])
+									//{
+									//	
+									//}
 								}
 								//obj[i].Hp -= 1;
 								//break;
