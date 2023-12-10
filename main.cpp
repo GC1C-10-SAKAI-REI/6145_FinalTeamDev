@@ -1341,8 +1341,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			break;
 		}
 
-		Novice::ScreenPrintf(0, 0, "flag = %d", sceneTransFlag);
-		Novice::ScreenPrintf(0, 20, "color = %x", sceneTrans.Color);
 
 		/// ↑描画処理ここまで
 
