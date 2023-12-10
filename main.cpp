@@ -483,7 +483,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//ベクトルとスピードを掛け合わせる
-			if (!attackFlag)
+			if (!attackFlag || runFlag)
 			{
 				player.Center.X += (player.Velocity.X * player.Spd) + runPower;
 			}
@@ -659,7 +659,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 								shakeFlag[i] = true;
 								shake[i] = 17;
 								frame[i] = 30;
-								//obj[i].Hp -= 1;
 								if (shakeFlag[i] == true)
 								{
 									frame[i] = 30;
@@ -676,10 +675,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 								{
 									shake[i] = 1;
 									shakeFlag[i] = false;
-									//if (!shakeFlag[i])
-									//{
-									//	
-									//}
+									if (!shakeFlag[i])
+									{
+										obj[i].Hp -= 1;
+									}
 								}
 								//obj[i].Hp -= 1;
 								//break;
@@ -1115,7 +1114,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						if (attackTimer < 3)
 						{
 							Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[0], 1, 1, 0.0f, WHITE);
-
 						}
 						if (attackTimer < 6 && attackTimer>2)
 						{
@@ -1140,7 +1138,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 						if (attackTimer < 3)
 						{
 							Novice::DrawSprite(int(player.Center.X - player.Rad), int(player.Center.Y - player.Rad), playerTexHundle[1], 1, 1, 0.0f, WHITE);
-
 						}
 						if (attackTimer < 6 && attackTimer>2)
 						{
