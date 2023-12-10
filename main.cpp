@@ -70,7 +70,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int runTimerL = 0;
 	int runTimerR = 0;
 	//アタックアニメーションのタイマー
-	int attackTimer = 0;	
+	int attackTimer = 0;
 
 	/*プレイヤーが落とすオブジェクト*/
 	const int remainObj = 5;
@@ -135,7 +135,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		{0,0},{0,0},0,0,0x00000000
 	};
-	int sceneTransFlag = 0;	
+	int sceneTransFlag = 0;
 	//スコアの桁数
 	const int scoreDigits = 4;
 	//スコア
@@ -205,6 +205,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int titleBGMplay = -1;
 	int gameplayBGMplay = -1;
 	int gameoverBGMPlay = -1;
+
+	/*se*/
+	const int se = 20;
+	int seHundle[se] =
+	{
+		Novice::LoadAudio("./Resources./Audios./Cat.mp3"),    //猫の音
+		Novice::LoadAudio("./Resources./Audios./Glass.mp3"),  //グラスが割れた
+		Novice::LoadAudio("./Resources./Audios./Bottle.mp3")  //瓶が割れた
+	};
+
+	int catSePlay = -1;
+	int glassSePlay = -1;
+	int bottleSePlay = -1;
+	//音が鳴っているかいないか判定する
+	bool sePlayFlag[3] = { false,false,false };
+
+
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -285,7 +302,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					//遷移処理はここで記述すると
 					//不具合が起きるため下の描画処理に有り
 				}
-			}			
+			}
 
 			if (sceneTransFlag == 1)
 			{
@@ -891,7 +908,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		switch (scene)
 		{
 		case TITLE: //タイトル
-			
+
 			/*テクスチャ*/
 			//背景
 			Novice::DrawSprite(0, 0, bgTexHundle[1], 1, 1, 0, WHITE);
@@ -921,7 +938,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::DrawSprite(0, 0, bgTexHundle[0], 1, 1, 0, WHITE);
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
-			
+
 			/*オーディオ関係*/
 			gameoverBGMPlay = -1;
 			if (Novice::IsPlayingAudio(titleBGMplay) == 0 || titleBGMplay == -1)
@@ -932,10 +949,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
+			if (keys[DIK_RETURN] && preKeys[DIK_RETURN] == 0)
+			{
+				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
+			}
+
 			break;
 
 		case TUTORIAL: //チュートリアル			
-			
+
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
 
@@ -955,11 +977,47 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 			}
 
+			//se関連
+			for (int i = 0; i < remainObj; i++)
+			{
+				//フラグがフォルスなったな
+				if (obj[i].ColFlag == false)
+				{
+					//リスボンが始まって一定の時点で
+					if (obj[i].ResTimer == 1)
+					{	//重さを判定する
+						if (obj[i].WeightFlag == false)
+						{
+							//軽い物se
+							if (Novice::IsPlayingAudio(sePlayFlag[1]) == false)
+							{
+								glassSePlay = Novice::PlayAudio(seHundle[1], 0, 1.0f);
+							}
+						}
+						else if (obj[i].WeightFlag == true)
+						{
+							//重い物se
+							if (Novice::IsPlayingAudio(sePlayFlag[2]) == false)
+							{
+								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 1.0f);
+							}
+
+
+						}
+					}
+				}
+			}
+
+
+
 			//ゲームオーバーへの遷移
 			if (!isPAlive)
 			{
 				Novice::StopAudio(gameplayBGMplay);
 				Novice::StopAudio(titleBGMplay);
+
+				catSePlay = Novice::PlayAudio(seHundle[0], 0, 0.3f);
+
 				scene = GAMEOVER;
 			}
 
@@ -1221,9 +1279,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					gameoverBGMPlay = Novice::PlayAudio(audioHundle[3], 0, 0.5);
 				}
 			}
-			
+
 			//遷移
-			
+
 			if (sceneTransFlag == 1)
 			{
 				if (fLib->SceneEnd(sceneTrans.Color))
@@ -1287,7 +1345,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Novice::DrawSprite(0, 0, bgTexHundle[3], 1, 1, 0, WHITE);
 			//遷移用の黒い四角
 			Novice::DrawBox((int)sceneTrans.Center.X, (int)sceneTrans.Center.Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0, sceneTrans.Color, kFillModeSolid);
-			
+
 			break;
 		}
 
