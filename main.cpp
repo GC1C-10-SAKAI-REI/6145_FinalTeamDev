@@ -222,10 +222,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 		case TITLE: //タイトル
 			//デバック用
-			if(keys[DIK_S] && preKeys[DIK_S] == 0)
-			{
-				scene = GAMEPLAY;
-			}
+			//if(keys[DIK_S] && preKeys[DIK_S] == 0)
+			//{
+			//	scene = GAMEPLAY;
+			//}
 			if (sceneTransFlag == 2)
 			{
 				if (fLib->SceneStart(sceneTrans.Color))
@@ -483,7 +483,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//ベクトルとスピードを掛け合わせる
-			if (!attackFlag || runFlag)
+			if (!attackFlag /*|| runFlag*/)
 			{
 				player.Center.X += (player.Velocity.X * player.Spd) + runPower;
 			}
