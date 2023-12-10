@@ -894,7 +894,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 					scene = TITLE;
 				}
 			}
-
 			break;
 		}
 
@@ -903,7 +902,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 		/// ↓描画処理ここから
-
 
 		switch (scene)
 		{
@@ -1001,14 +999,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 							{
 								bottleSePlay = Novice::PlayAudio(seHundle[2], 0, 1.0f);
 							}
-
-
 						}
 					}
 				}
 			}
-
-
 
 			//ゲームオーバーへの遷移
 			if (!isPAlive)
