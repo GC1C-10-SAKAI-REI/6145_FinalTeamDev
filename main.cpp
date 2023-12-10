@@ -483,7 +483,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//ベクトルとスピードを掛け合わせる
-			if (!attackFlag /*|| runFlag*/)
+			if (!attackFlag || runFlag)
 			{
 				player.Center.X += (player.Velocity.X * player.Spd) + runPower;
 			}
