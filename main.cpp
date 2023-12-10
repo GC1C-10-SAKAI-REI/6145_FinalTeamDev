@@ -218,10 +218,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	int catSePlay = -1;
 	int glassSePlay = -1;
 	int bottleSePlay = -1;
-	//音が鳴っているかいないか判定する
+	//音が鳴っているかいないか判定する	
 	bool sePlayFlag[3] = { false,false,false };
-
-
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0)
@@ -496,7 +494,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			}
 
 			//ベクトルとスピードを掛け合わせる
-			if (!attackFlag)
+			if (!attackFlag || runFlag )
 			{
 				player.Center.X += (player.Velocity.X * player.Spd) + runPower;
 			}
